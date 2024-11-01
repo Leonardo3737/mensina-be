@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"mensina-be/core/models"
 	"mensina-be/database"
 )
@@ -8,7 +9,11 @@ import (
 func DeleteUser(id int) error {
 	db := database.GetDatabase()
 
-	err := db.Delete(&models.User{}, id).Error
+	result := db.Delete(&models.User{}, id)
 
-	return err
+	if int(result.RowsAffected) == 0 {
+		return fmt.Errorf("error: user not found")
+	}
+
+	return result.Error
 }

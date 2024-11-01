@@ -12,7 +12,7 @@ import (
 var db *gorm.DB
 
 func StartDb() {
-	str := "root:mypassword@tcp(localhost:3306)/mensina"
+	str := "root:mypassword@tcp(localhost:3307)/mensina"
 
 	database, err := gorm.Open(mysql.Open(str), &gorm.Config{})
 
