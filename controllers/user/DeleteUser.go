@@ -8,6 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Delete user
+// @Tags User
+// @Param id path int true "User ID"
+// @Success 204 "No Content"
+// @Router /user/{id} [delete]
 func DeleteUser(c *gin.Context) {
 	_id := c.Param("id")
 

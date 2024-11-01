@@ -1,5 +1,7 @@
 package models
 
+// @Description User object
+// @Schema
 type User struct {
 	ID       uint   `json:"id" gorm:"primaryKey"`
 	Name     string `json:"name"  validate:"required"`

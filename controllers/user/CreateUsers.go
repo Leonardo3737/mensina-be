@@ -8,17 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateUser godoc
 // @Summary Create a new user
-// @Description Create a new user with the provided details
-// @Tags Users
+// @Tags User
 // @Accept json
 // @Produce json
 // @Param user body models.User true "User data"
-// @Success 201 {object} models.User
-// @Failure 400 {object} utils.ErrorResponse
-// @Failure 409 {object} utils.ErrorResponse
-// @Failure 500 {object} utils.ErrorResponse
+// @Success 201 {object} models.User "User"
 // @Router /user [post]
 func CreateUser(c *gin.Context) {
 	var _user models.User

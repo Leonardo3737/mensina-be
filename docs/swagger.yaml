@@ -1,6 +1,7 @@
 basePath: /
 definitions:
   models.User:
+    description: User object
     properties:
       id:
         type: integer
@@ -17,11 +18,6 @@ definitions:
     - password
     - username
     type: object
-  utils.ErrorResponse:
-    properties:
-      error:
-        type: string
-    type: object
 host: localhost:5000
 info:
   contact: {}
@@ -30,10 +26,22 @@ info:
   version: "1.0"
 paths:
   /user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: Get all users
+      tags:
+      - User
     post:
       consumes:
       - application/json
-      description: Create a new user with the provided details
       parameters:
       - description: User data
         in: body
@@ -45,22 +53,65 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: User
           schema:
             $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.ErrorResponse'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/utils.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.ErrorResponse'
       summary: Create a new user
       tags:
-      - Users
+      - User
+  /user/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      summary: Delete user
+      tags:
+      - User
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Get user by ID
+      tags:
+      - User
+    put:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Fields to update
+        in: body
+        name: user
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Update user by ID
+      tags:
+      - User
 swagger: "2.0"

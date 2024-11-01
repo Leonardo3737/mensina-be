@@ -16,8 +16,27 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/user": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
-                "description": "Create a new user with the provided details",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,7 +44,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "User"
                 ],
                 "summary": "Create a new user",
                 "parameters": [
@@ -41,28 +60,94 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "User",
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
-                    },
-                    "400": {
-                        "description": "Bad Request",
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/models.User"
                         }
+                    }
+                }
+            },
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     },
-                    "409": {
-                        "description": "Conflict",
+                    {
+                        "description": "Fields to update",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "type": "object",
+                            "additionalProperties": true
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/models.User"
                         }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -70,6 +155,7 @@ const docTemplate = `{
     },
     "definitions": {
         "models.User": {
+            "description": "User object",
             "type": "object",
             "required": [
                 "name",
@@ -90,14 +176,6 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "minLength": 3
-                }
-            }
-        },
-        "utils.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
                 }
             }
         }

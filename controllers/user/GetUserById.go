@@ -8,6 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Get user by ID
+// @Tags User
+// @Param id path int true "User ID"
+// @Produce json
+// @Success 200 {object} models.User "Success"
+// @Router /user/{id} [get]
 func GetById(c *gin.Context) {
 	_id := c.Param("id")
 

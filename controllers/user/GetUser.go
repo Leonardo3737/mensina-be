@@ -7,6 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Get all users
+// @Tags User
+// @Produce json
+// @Success 200 {array} models.User "Success"
+// @Router /user [get]
 func GetUsers(c *gin.Context) {
 	users, err := user.GetUsers()
 
