@@ -14,6 +14,7 @@ import (
 // @Param id path int true "User ID"
 // @Param user body models.User false "User object"
 // @Produce json
+// @Security BearerAuth
 // @Success 200 {object} models.User "Success"
 // @Router /user/{id} [put]
 func UpdateUser(c *gin.Context) {

@@ -3,7 +3,9 @@ package user
 import (
 	"errors"
 	"fmt"
+	"log"
 	"mensina-be/core/models"
+	"mensina-be/core/services"
 	"mensina-be/database"
 
 	"gorm.io/gorm"
@@ -21,6 +23,11 @@ func UpdateUser(user *models.User) (models.User, int, error) {
 	} else if err == nil {
 		// Usuário já existe
 		return models.User{}, 409, fmt.Errorf("username already exists")
+	}
+
+	if user.Password != "" {
+		log.Print("senha")
+		user.Password = services.SHA256Enconder(user.Password)
 	}
 
 	err = db.

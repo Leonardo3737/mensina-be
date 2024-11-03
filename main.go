@@ -13,6 +13,11 @@ import (
 // @description API desenvolvida para projeto academico
 // @host localhost:5000
 // @BasePath /
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Insira o token de autenticação no formato: "Bearer {token}"
 func main() {
 	err := godotenv.Load()
 	if err != nil {

@@ -3,6 +3,7 @@ package routes
 import (
 	loginControllers "mensina-be/controllers/login"
 	userControllers "mensina-be/controllers/user"
+	"mensina-be/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +16,9 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		user.GET("/", userControllers.GetUsers)
 		user.GET("/:id", userControllers.GetById)
 		user.POST("/", userControllers.CreateUser)
-		user.PUT("/:id", userControllers.UpdateUser)
-		user.DELETE("/:id", userControllers.DeleteUser)
+		// Rotas protegidas
+		user.PUT("/:id", middlewares.AuthById(), userControllers.UpdateUser)
+		user.DELETE("/:id", middlewares.AuthById(), userControllers.DeleteUser)
 	}
 
 	// AUTH routes

@@ -12,6 +12,7 @@ import (
 // @Tags User
 // @Param id path int true "User ID"
 // @Success 204 "No Content"
+// @Security BearerAuth
 // @Router /user/{id} [delete]
 func DeleteUser(c *gin.Context) {
 	_id := c.Param("id")
