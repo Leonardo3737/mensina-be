@@ -15,6 +15,39 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate",
+                "parameters": [
+                    {
+                        "description": "Authentication data",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Token",
+                        "schema": {
+                            "$ref": "#/definitions/models.LoginRes"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "produces": [
@@ -112,13 +145,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Fields to update",
+                        "description": "User object",
                         "name": "user",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -154,6 +185,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Login": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.LoginRes": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "description": "User object",
             "type": "object",

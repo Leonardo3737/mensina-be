@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"mensina-be/database/migrations"
+	"os"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -12,7 +13,7 @@ import (
 var db *gorm.DB
 
 func StartDb() {
-	str := "root:mypassword@tcp(localhost:3307)/mensina"
+	str := os.Getenv("DB_CONNECTION")
 
 	database, err := gorm.Open(mysql.Open(str), &gorm.Config{})
 

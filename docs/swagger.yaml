@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  models.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.LoginRes:
+    properties:
+      token:
+        type: string
+    type: object
   models.User:
     description: User object
     properties:
@@ -25,6 +40,27 @@ info:
   title: API Mensina
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication data
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Token
+          schema:
+            $ref: '#/definitions/models.LoginRes'
+      summary: Authenticate
+      tags:
+      - Auth
   /user:
     get:
       produces:
@@ -97,13 +133,11 @@ paths:
         name: id
         required: true
         type: integer
-      - description: Fields to update
+      - description: User object
         in: body
         name: user
-        required: true
         schema:
-          additionalProperties: true
-          type: object
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:

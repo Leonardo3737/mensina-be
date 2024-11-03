@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"mensina-be/core/models"
+	"mensina-be/core/services"
 	"mensina-be/database"
 
 	"github.com/go-playground/validator/v10"
@@ -31,6 +32,9 @@ func CreateUser(user *models.User) (models.User, int, error) {
 		// Usuário já existe
 		return models.User{}, 409, fmt.Errorf("username already exists")
 	}
+
+	// Criptografar senha
+	user.Password = services.SHA256Enconder(user.Password)
 
 	err = db.Create(user).Error
 

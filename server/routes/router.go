@@ -1,19 +1,26 @@
 package routes
 
 import (
-	controllers "mensina-be/controllers/user"
+	loginControllers "mensina-be/controllers/login"
+	userControllers "mensina-be/controllers/user"
 
 	"github.com/gin-gonic/gin"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
+
+	// USER routes
 	user := router.Group("user")
 	{
-		user.GET("/", controllers.GetUsers)
-		user.GET("/:id", controllers.GetById)
-		user.POST("/", controllers.CreateUser)
-		user.PUT("/:id", controllers.UpdateUser)
-		user.DELETE("/:id", controllers.DeleteUser)
+		user.GET("/", userControllers.GetUsers)
+		user.GET("/:id", userControllers.GetById)
+		user.POST("/", userControllers.CreateUser)
+		user.PUT("/:id", userControllers.UpdateUser)
+		user.DELETE("/:id", userControllers.DeleteUser)
 	}
+
+	// AUTH routes
+	router.POST("login", loginControllers.Login)
+
 	return router
 }
