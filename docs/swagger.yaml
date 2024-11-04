@@ -25,6 +25,26 @@ definitions:
     - password
     - username
     type: object
+  dto.OutputAnswerDto:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    type: object
+  dto.OutputQuestionDto:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/dto.OutputAnswerDto'
+        type: array
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
   dto.OutputToken:
     properties:
       token:
@@ -39,19 +59,33 @@ definitions:
       username:
         type: string
     type: object
+  models.Quiz:
+    properties:
+      id:
+        type: integer
+      tag:
+        $ref: '#/definitions/models.Tag'
+      tagId:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.Tag:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    type: object
   models.User:
     description: User object
     properties:
-      createdAt:
-        type: string
       id:
         type: integer
       name:
         type: string
       password:
         minLength: 6
-        type: string
-      updatedAt:
         type: string
       username:
         minLength: 3
@@ -89,6 +123,44 @@ paths:
       summary: Authenticate
       tags:
       - Auth
+  /quiz:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/models.Quiz'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all quizzes
+      tags:
+      - Quiz
+  /quiz/questions/{quiz_id}:
+    get:
+      parameters:
+      - description: QUIZ ID
+        in: path
+        name: quiz_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/dto.OutputQuestionDto'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get question by Quiz_ID
+      tags:
+      - Quiz
   /user:
     get:
       produces:

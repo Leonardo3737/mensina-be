@@ -1,4 +1,4 @@
-package controllers
+package userController
 
 import (
 	"mensina-be/core/useCases/userUseCase"

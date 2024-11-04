@@ -48,6 +48,69 @@ const docTemplate = `{
                 }
             }
         },
+        "/quiz": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Get all quizzes",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Quiz"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/quiz/questions/{quiz_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Get question by Quiz_ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "QUIZ ID",
+                        "name": "quiz_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.OutputQuestionDto"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "produces": [
@@ -226,6 +289,37 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.OutputAnswerDto": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OutputQuestionDto": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.OutputAnswerDto"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.OutputToken": {
             "type": "object",
             "properties": {
@@ -248,6 +342,34 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Quiz": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "tag": {
+                    "$ref": "#/definitions/models.Tag"
+                },
+                "tagId": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Tag": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.User": {
             "description": "User object",
             "type": "object",
@@ -257,9 +379,6 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -269,9 +388,6 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 6
-                },
-                "updatedAt": {
-                    "type": "string"
                 },
                 "username": {
                     "type": "string",

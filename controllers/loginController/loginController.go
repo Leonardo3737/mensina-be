@@ -1,4 +1,4 @@
-package controllers
+package loginController
 
 import (
 	"mensina-be/core/dto"
