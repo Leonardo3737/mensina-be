@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"mensina-be/core/models"
-	"mensina-be/core/useCases/user"
+	"mensina-be/core/dto"
+	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
@@ -12,11 +12,11 @@ import (
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User data"
+// @Param user body dto.CreateUserDto true "User data"
 // @Success 201 {object} models.User "User"
 // @Router /user [post]
 func CreateUser(c *gin.Context) {
-	var _user models.User
+	var _user dto.CreateUserDto
 
 	err := c.ShouldBindJSON(&_user)
 
@@ -27,7 +27,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	newUser, status, err := user.CreateUser(&_user)
+	newUser, status, err := userUseCase.CreateUser(&_user)
 
 	if err != nil {
 		c.JSON(status, utils.ErrorResponse{

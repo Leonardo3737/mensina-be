@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"mensina-be/core/useCases/user"
+	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 	"strconv"
 
@@ -25,7 +25,7 @@ func GetById(c *gin.Context) {
 		})
 		return
 	}
-	user, err := user.GetUserById(id)
+	user, err := userUseCase.GetUserById(id)
 
 	if err != nil {
 		c.JSON(404, utils.ErrorResponse{

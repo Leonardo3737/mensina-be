@@ -1,8 +1,9 @@
-package user
+package userUseCase
 
 import (
 	"errors"
 	"fmt"
+	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/services"
 	"mensina-be/database"
@@ -13,7 +14,7 @@ import (
 
 var validate = validator.New()
 
-func CreateUser(user *models.User) (models.User, int, error) {
+func CreateUser(user *dto.CreateUserDto) (models.User, int, error) {
 
 	err := validate.Struct(user)
 	if err != nil {
@@ -34,13 +35,17 @@ func CreateUser(user *models.User) (models.User, int, error) {
 	}
 
 	// Criptografar senha
-	user.Password = services.SHA256Enconder(user.Password)
+	newUser := models.User{
+		UserName: user.UserName,
+		Name:     user.Name,
+		Password: services.SHA256Enconder(user.Password),
+	}
 
-	err = db.Create(user).Error
+	err = db.Create(newUser).Error
 
 	if err != nil {
 		return models.User{}, 500, fmt.Errorf("cannot create user")
 	}
 
-	return *user, 201, err
+	return newUser, 201, err
 }

@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"mensina-be/core/models"
-	"mensina-be/core/useCases/auth"
+	"mensina-be/core/dto"
+	"mensina-be/core/useCases/authUseCase"
 	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
@@ -12,11 +12,11 @@ import (
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param login body models.Login true "Authentication data"
-// @Success 201 {object} models.LoginRes "Token"
+// @Param login body dto.InputLoginDto true "Authentication data"
+// @Success 201 {object} dto.OutputToken "Token"
 // @Router /login [post]
 func Login(c *gin.Context) {
-	var _login models.Login
+	var _login dto.InputLoginDto
 
 	err := c.ShouldBindJSON(&_login)
 
@@ -27,7 +27,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	res, status, err := auth.Login(&_login)
+	res, status, err := authUseCase.Login(&_login)
 
 	if err != nil {
 		c.JSON(status, utils.ErrorResponse{

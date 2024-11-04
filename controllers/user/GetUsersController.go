@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"mensina-be/core/useCases/user"
+	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ import (
 // @Success 200 {array} models.User "Success"
 // @Router /user [get]
 func GetUsers(c *gin.Context) {
-	users, err := user.GetUsers()
+	users, err := userUseCase.GetUsers()
 
 	if err != nil {
 		c.JSON(500, utils.ErrorResponse{

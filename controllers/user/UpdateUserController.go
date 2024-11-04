@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"mensina-be/core/models"
-	"mensina-be/core/useCases/user"
+	"mensina-be/core/dto"
+	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 	"strconv"
 
@@ -12,10 +12,9 @@ import (
 // @Summary Update user by ID
 // @Tags User
 // @Param id path int true "User ID"
-// @Param user body models.User false "User object"
-// @Produce json
+// @Param user body dto.UpdateUserDto true "User object"
 // @Security BearerAuth
-// @Success 200 {object} models.User "Success"
+// @Success 204 "Success"
 // @Router /user/{id} [put]
 func UpdateUser(c *gin.Context) {
 	_id := c.Param("id")
@@ -28,7 +27,7 @@ func UpdateUser(c *gin.Context) {
 		})
 		return
 	}
-	var _user models.User
+	var _user dto.UpdateUserDto
 
 	err = c.ShouldBindJSON(&_user)
 
@@ -39,14 +38,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if int(_user.ID) != id {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "request ID must be equal to the body object ID",
-		})
-		return
-	}
-
-	updatedUser, status, err := user.UpdateUser(&_user)
+	status, err := userUseCase.UpdateUser(&_user, id)
 
 	if err != nil {
 		c.JSON(status, utils.ErrorResponse{
@@ -55,5 +47,5 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(status, updatedUser)
+	c.Status(status)
 }

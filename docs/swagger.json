@@ -28,7 +28,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Login"
+                            "$ref": "#/definitions/dto.InputLoginDto"
                         }
                     }
                 ],
@@ -36,7 +36,7 @@
                     "201": {
                         "description": "Token",
                         "schema": {
-                            "$ref": "#/definitions/models.LoginRes"
+                            "$ref": "#/definitions/dto.OutputToken"
                         }
                     }
                 }
@@ -81,7 +81,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dto.CreateUserDto"
                         }
                     }
                 ],
@@ -128,9 +128,6 @@
                         "BearerAuth": []
                     }
                 ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "User"
                 ],
@@ -147,17 +144,15 @@
                         "description": "User object",
                         "name": "user",
                         "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dto.UpdateUserDto"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
+                    "204": {
+                        "description": "Success"
                     }
                 }
             },
@@ -189,7 +184,28 @@
         }
     },
     "definitions": {
-        "models.Login": {
+        "dto.CreateUserDto": {
+            "type": "object",
+            "required": [
+                "name",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "username": {
+                    "type": "string",
+                    "minLength": 3
+                }
+            }
+        },
+        "dto.InputLoginDto": {
             "type": "object",
             "required": [
                 "password",
@@ -204,10 +220,24 @@
                 }
             }
         },
-        "models.LoginRes": {
+        "dto.OutputToken": {
             "type": "object",
             "properties": {
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateUserDto": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -221,6 +251,9 @@
                 "username"
             ],
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -230,6 +263,9 @@
                 "password": {
                     "type": "string",
                     "minLength": 6
+                },
+                "updatedAt": {
+                    "type": "string"
                 },
                 "username": {
                     "type": "string",

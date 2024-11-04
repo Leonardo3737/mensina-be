@@ -1,4 +1,4 @@
-package user
+package userUseCase
 
 import (
 	"mensina-be/core/models"

@@ -1,9 +1,10 @@
-package user
+package userUseCase
 
 import (
 	"errors"
 	"fmt"
 	"log"
+	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/services"
 	"mensina-be/database"
@@ -11,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func UpdateUser(user *models.User) (models.User, int, error) {
+func UpdateUser(user *dto.UpdateUserDto, id int) (int, error) {
 	db := database.GetDatabase()
 
 	var existingUser models.User
@@ -19,10 +20,10 @@ func UpdateUser(user *models.User) (models.User, int, error) {
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		// Erro inesperado (por exemplo, conexão com o banco)
-		return models.User{}, 500, fmt.Errorf("cannot checking username")
+		return 500, fmt.Errorf("cannot checking username")
 	} else if err == nil {
 		// Usuário já existe
-		return models.User{}, 409, fmt.Errorf("username already exists")
+		return 409, fmt.Errorf("username already exists")
 	}
 
 	if user.Password != "" {
@@ -32,12 +33,12 @@ func UpdateUser(user *models.User) (models.User, int, error) {
 
 	err = db.
 		Model(&existingUser).
-		Where("id = ?", user.ID).
+		Where("id = ?", id).
 		Updates(user).Error
 
 	if err != nil {
-		return models.User{}, 500, fmt.Errorf("cannot update user")
+		return 500, fmt.Errorf("cannot update user")
 	}
 
-	return *user, 204, err
+	return 204, err
 }

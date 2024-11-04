@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"mensina-be/core/useCases/user"
+	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 	"strconv"
 
@@ -25,7 +25,7 @@ func DeleteUser(c *gin.Context) {
 		})
 		return
 	}
-	err = user.DeleteUser(id)
+	err = userUseCase.DeleteUser(id)
 
 	if err != nil {
 		c.JSON(404, utils.ErrorResponse{

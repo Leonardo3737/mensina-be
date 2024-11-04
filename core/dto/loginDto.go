@@ -1,10 +1,10 @@
-package models
+package dto
 
-type Login struct {
+type InputLoginDto struct {
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
 
-type LoginRes struct {
+type OutputToken struct {
 	Token string `json:"token"`
 }

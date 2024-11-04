@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Login"
+                            "$ref": "#/definitions/dto.InputLoginDto"
                         }
                     }
                 ],
@@ -42,7 +42,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Token",
                         "schema": {
-                            "$ref": "#/definitions/models.LoginRes"
+                            "$ref": "#/definitions/dto.OutputToken"
                         }
                     }
                 }
@@ -87,7 +87,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dto.CreateUserDto"
                         }
                     }
                 ],
@@ -134,9 +134,6 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "User"
                 ],
@@ -153,17 +150,15 @@ const docTemplate = `{
                         "description": "User object",
                         "name": "user",
                         "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dto.UpdateUserDto"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
+                    "204": {
+                        "description": "Success"
                     }
                 }
             },
@@ -195,7 +190,28 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Login": {
+        "dto.CreateUserDto": {
+            "type": "object",
+            "required": [
+                "name",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "username": {
+                    "type": "string",
+                    "minLength": 3
+                }
+            }
+        },
+        "dto.InputLoginDto": {
             "type": "object",
             "required": [
                 "password",
@@ -210,10 +226,24 @@ const docTemplate = `{
                 }
             }
         },
-        "models.LoginRes": {
+        "dto.OutputToken": {
             "type": "object",
             "properties": {
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateUserDto": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -227,6 +257,9 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -236,6 +269,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 6
+                },
+                "updatedAt": {
+                    "type": "string"
                 },
                 "username": {
                     "type": "string",
