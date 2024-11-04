@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"mensina-be/core/dto"
-	"mensina-be/core/useCases/authUseCase"
+	"mensina-be/core/useCases/loginUseCase"
 	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	res, status, err := authUseCase.Login(&_login)
+	res, status, err := loginUseCase.Login(&_login)
 
 	if err != nil {
 		c.JSON(status, utils.ErrorResponse{

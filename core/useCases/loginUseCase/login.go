@@ -1,4 +1,4 @@
-package authUseCase
+package loginUseCase
 
 import (
 	"fmt"

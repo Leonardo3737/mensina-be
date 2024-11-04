@@ -41,7 +41,7 @@ func CreateUser(user *dto.CreateUserDto) (models.User, int, error) {
 		Password: services.SHA256Enconder(user.Password),
 	}
 
-	err = db.Create(newUser).Error
+	err = db.Create(&newUser).Error
 
 	if err != nil {
 		return models.User{}, 500, fmt.Errorf("cannot create user")
