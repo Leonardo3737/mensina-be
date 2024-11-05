@@ -2,7 +2,8 @@ package routes
 
 import (
 	"mensina-be/controllers/loginController"
-	quizController "mensina-be/controllers/quizControllers"
+	"mensina-be/controllers/quizController"
+	"mensina-be/controllers/tagController"
 	"mensina-be/controllers/userController"
 	"mensina-be/server/middlewares"
 
@@ -10,6 +11,9 @@ import (
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
+
+	// AUTH routes
+	router.POST("login", loginController.Login)
 
 	// USER routes
 	user := router.Group("user")
@@ -22,14 +26,16 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		user.DELETE("/:id", middlewares.AuthById(), userController.DeleteUser)
 	}
 
-	// AUTH routes
-	router.POST("login", loginController.Login)
-
 	// QUIZ routes
 	quiz := router.Group("quiz", middlewares.Auth())
 	{
 		quiz.GET("/", quizController.GetQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
+	}
+
+	tag := router.Group("tag", middlewares.Auth())
+	{
+		tag.GET("/", tagController.GetTags)
 	}
 
 	return router

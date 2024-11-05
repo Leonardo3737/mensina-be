@@ -161,6 +161,20 @@ paths:
       summary: Get question by Quiz_ID
       tags:
       - Quiz
+  /tag:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/models.Tag'
+      security:
+      - BearerAuth: []
+      summary: Get all tags
+      tags:
+      - Tag
   /user:
     get:
       produces:
