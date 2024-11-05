@@ -62,6 +62,14 @@ const docTemplate = `{
                     "Quiz"
                 ],
                 "summary": "Get all quizzes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tag ID",
+                        "name": "tag_id",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",

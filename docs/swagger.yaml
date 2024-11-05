@@ -125,6 +125,11 @@ paths:
       - Auth
   /quiz:
     get:
+      parameters:
+      - description: Tag ID
+        in: query
+        name: tag_id
+        type: string
       produces:
       - application/json
       responses:

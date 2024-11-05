@@ -11,10 +11,13 @@ import (
 // @Tags Quiz
 // @Produce json
 // @Success 200 {array} models.Quiz "Success"
+// @Param tag_id query string false "Tag ID"
 // @Security BearerAuth
 // @Router /quiz [get]
 func GetQuiz(c *gin.Context) {
-	quizzes, err := quizUseCase.GetQuizzes()
+	tagId := c.Query("tag_id")
+
+	quizzes, err := quizUseCase.GetQuizzes(tagId)
 
 	if err != nil {
 		c.JSON(500, utils.ErrorResponse{
