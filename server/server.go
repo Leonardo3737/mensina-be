@@ -5,6 +5,7 @@ import (
 	"mensina-be/docs"
 	"mensina-be/server/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	swaggerfiles "github.com/swaggo/files"
@@ -24,6 +25,15 @@ func NewServer() Server {
 }
 
 func (s *Server) Run() {
+
+	s.server.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
 	router := routes.ConfigRoutes(s.server)
 
 	docs.SwaggerInfo.BasePath = "/"

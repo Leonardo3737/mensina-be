@@ -95,6 +95,11 @@ definitions:
     - password
     - username
     type: object
+  quizController.answerCheckResponse:
+    properties:
+      is_correct:
+        type: boolean
+    type: object
 host: localhost:5000
 info:
   contact: {}
@@ -142,6 +147,31 @@ paths:
       security:
       - BearerAuth: []
       summary: Get all quizzes
+      tags:
+      - Quiz
+  /quiz/answer_check:
+    get:
+      parameters:
+      - description: Answer ID
+        in: query
+        name: answer_id
+        required: true
+        type: string
+      - description: Question ID
+        in: query
+        name: question_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/quizController.answerCheckResponse'
+      security:
+      - BearerAuth: []
+      summary: Check
       tags:
       - Quiz
   /quiz/questions/{quiz_id}:

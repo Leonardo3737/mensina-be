@@ -31,6 +31,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	{
 		quiz.GET("/", quizController.GetQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
+		quiz.GET("/answer_check", quizController.AnswerCheck)
 	}
 
 	tag := router.Group("tag", middlewares.Auth())

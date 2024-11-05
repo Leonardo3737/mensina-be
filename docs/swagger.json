@@ -77,6 +77,46 @@
                 }
             }
         },
+        "/quiz/answer_check": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Check",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Answer ID",
+                        "name": "answer_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Question ID",
+                        "name": "question_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/quizController.answerCheckResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/quiz/questions/{quiz_id}": {
             "get": {
                 "security": [
@@ -418,6 +458,14 @@
                 "username": {
                     "type": "string",
                     "minLength": 3
+                }
+            }
+        },
+        "quizController.answerCheckResponse": {
+            "type": "object",
+            "properties": {
+                "is_correct": {
+                    "type": "boolean"
                 }
             }
         }
