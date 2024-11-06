@@ -19,11 +19,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	user := router.Group("user")
 	{
 		user.GET("/", userController.GetUsers)
-		user.GET("/:id", userController.GetById)
 		user.POST("/", userController.CreateUser)
 		// Rotas protegidas
-		user.PUT("/:id", middlewares.AuthById(), userController.UpdateUser)
-		user.DELETE("/:id", middlewares.AuthById(), userController.DeleteUser)
+		user.GET("/user_infos", middlewares.Auth(), userController.GetUserInfos)
+		user.PUT("/", middlewares.Auth(), userController.UpdateUser)
+		user.DELETE("/", middlewares.Auth(), userController.DeleteUser)
 	}
 
 	// QUIZ routes
@@ -32,6 +32,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		quiz.GET("/", quizController.GetQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
 		quiz.GET("/answer_check", quizController.AnswerCheck)
+		quiz.GET("/start/:quiz_id", quizController.StartQuiz)
 	}
 
 	tag := router.Group("tag", middlewares.Auth())

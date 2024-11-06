@@ -6,7 +6,7 @@ import (
 	"mensina-be/database"
 )
 
-func DeleteUser(id int) error {
+func DeleteUser(id uint) error {
 	db := database.GetDatabase()
 
 	result := db.Delete(&models.User{}, id)

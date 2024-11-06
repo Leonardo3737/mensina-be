@@ -3,28 +3,25 @@ package userController
 import (
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 // @Summary Delete user
 // @Tags User
-// @Param id path int true "User ID"
 // @Success 204 "No Content"
 // @Security BearerAuth
-// @Router /user/{id} [delete]
+// @Router /user/ [delete]
 func DeleteUser(c *gin.Context) {
-	_id := c.Param("id")
-
-	id, err := strconv.Atoi(_id)
+	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "ID has to be integer",
+		c.JSON(401, utils.ErrorResponse{
+			Error: err.Error(),
 		})
 		return
 	}
+
 	err = userUseCase.DeleteUser(id)
 
 	if err != nil {

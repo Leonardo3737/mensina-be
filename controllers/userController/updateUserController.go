@@ -4,29 +4,26 @@ import (
 	"mensina-be/core/dto"
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 // @Summary Update user by ID
 // @Tags User
-// @Param id path int true "User ID"
 // @Param user body dto.UpdateUserDto true "User object"
 // @Security BearerAuth
 // @Success 204 "Success"
-// @Router /user/{id} [put]
+// @Router /user/ [put]
 func UpdateUser(c *gin.Context) {
-	_id := c.Param("id")
-
-	id, err := strconv.Atoi(_id)
+	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "ID has to be integer",
+		c.JSON(401, utils.ErrorResponse{
+			Error: err.Error(),
 		})
 		return
 	}
+
 	var _user dto.UpdateUserDto
 
 	err = c.ShouldBindJSON(&_user)

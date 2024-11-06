@@ -196,6 +196,21 @@ paths:
       summary: Get question by Quiz_ID
       tags:
       - Quiz
+  /quiz/start/{quiz_id}:
+    get:
+      parameters:
+      - description: Quiz ID
+        in: path
+        name: quiz_id
+        type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Start quiz
+      tags:
+      - Quiz
   /tag:
     get:
       produces:
@@ -244,14 +259,8 @@ paths:
       summary: Create a new user
       tags:
       - User
-  /user/{id}:
+  /user/:
     delete:
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
       responses:
         "204":
           description: No Content
@@ -260,30 +269,8 @@ paths:
       summary: Delete user
       tags:
       - User
-    get:
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/models.User'
-      summary: Get user by ID
-      tags:
-      - User
     put:
       parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: User object
         in: body
         name: user
@@ -296,6 +283,20 @@ paths:
       security:
       - BearerAuth: []
       summary: Update user by ID
+      tags:
+      - User
+  /user/user_infos:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - BearerAuth: []
+      summary: Get user info with Token
       tags:
       - User
 securityDefinitions:

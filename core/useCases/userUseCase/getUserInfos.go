@@ -5,7 +5,7 @@ import (
 	"mensina-be/database"
 )
 
-func GetUserById(id int) (models.User, error) {
+func GetUserInfos(id uint) (models.User, error) {
 	db := database.GetDatabase()
 	var user models.User
 

@@ -3,29 +3,27 @@ package userController
 import (
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary Get user by ID
+// @Summary Get user info with Token
 // @Tags User
-// @Param id path int true "User ID"
 // @Produce json
 // @Success 200 {object} models.User "Success"
-// @Router /user/{id} [get]
-func GetById(c *gin.Context) {
-	_id := c.Param("id")
-
-	id, err := strconv.Atoi(_id)
+// @Security BearerAuth
+// @Router /user/user_infos [get]
+func GetUserInfos(c *gin.Context) {
+	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "ID has to be integer",
+		c.JSON(401, utils.ErrorResponse{
+			Error: err.Error(),
 		})
 		return
 	}
-	user, err := userUseCase.GetUserById(id)
+
+	user, err := userUseCase.GetUserInfos(id)
 
 	if err != nil {
 		c.JSON(404, utils.ErrorResponse{
