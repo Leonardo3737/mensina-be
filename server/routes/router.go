@@ -5,12 +5,13 @@ import (
 	"mensina-be/controllers/quizController"
 	"mensina-be/controllers/tagController"
 	"mensina-be/controllers/userController"
+	"mensina-be/core/dto"
 	"mensina-be/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigRoutes(router *gin.Engine) *gin.Engine {
+func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan dto.QuizRoutineChannel) *gin.Engine {
 
 	// AUTH routes
 	router.POST("login", loginController.Login)
@@ -32,7 +33,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		quiz.GET("/", quizController.GetQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
 		quiz.GET("/answer_check", quizController.AnswerCheck)
-		quiz.GET("/start/:quiz_id", quizController.StartQuiz)
+		quiz.GET("/start/:quiz_id", func(c *gin.Context) { quizController.StartQuiz(c, quizRoutineChannel) })
 	}
 
 	tag := router.Group("tag", middlewares.Auth())

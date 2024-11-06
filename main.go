@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"mensina-be/core/dto"
+	"mensina-be/core/routines"
 	"mensina-be/database"
 	"mensina-be/server"
 
@@ -26,5 +28,10 @@ func main() {
 
 	database.StartDb()
 	server := server.NewServer()
-	server.Run()
+
+	quizRoutineChannel := make(chan dto.QuizRoutineChannel)
+
+	go routines.RunQuizRoutine(quizRoutineChannel)
+
+	server.Run(quizRoutineChannel)
 }

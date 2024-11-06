@@ -3,27 +3,14 @@ package quizUseCase
 import (
 	"errors"
 	"fmt"
+	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/database"
 
 	"gorm.io/gorm"
 )
 
-type ChRealizeQuiz struct {
-	Scored  bool
-	UserId  uint
-	QuizzId uint
-}
-
-type ResRealizeQuiz struct {
-	QuizzId uint
-	Hits    int
-	Total   int
-}
-
-var Sections = make(map[int]*ResRealizeQuiz)
-
-func StartQuiz(userId, quizId uint) (int, error) {
+func StartQuiz(userId, quizId uint, quizRoutineChannel chan dto.QuizRoutineChannel) (int, error) {
 	db := database.GetDatabase()
 
 	var user models.User
@@ -40,36 +27,19 @@ func StartQuiz(userId, quizId uint) (int, error) {
 	}
 	fmt.Println(quiz.Title)
 
-	return 200, nil
-}
-
-func updateQuizState(ch chan ChRealizeQuiz) {
-
-	for {
-		score := <-ch
-		section, exist := Sections[int(score.UserId)]
-
-		if !exist {
-			fmt.Println("Iniciando Quiz")
-			section.Total = 0
-			section.Hits = 0
-			section.QuizzId = score.QuizzId
-			break
+	select {
+	case sectionCh := <-quizRoutineChannel:
+		fmt.Println(sectionCh)
+		return 201, nil
+	default:
+		quizRoutineChannel <- dto.QuizRoutineChannel{
+			Score:   0,
+			UserId:  userId,
+			QuizzId: quizId,
 		}
 
-		section.Total++
-
-		if score.Scored {
-			section.Hits++
-		}
-
-		fmt.Printf("Respondidos: %x\n", section.Total)
-		fmt.Printf("%x\n", section.Total)
-		if section.Total == 5 {
-			break
-		}
+		return 200, nil
 	}
-	fmt.Printf("Finalizando Quiz")
 }
 
 func getEntity(model interface{}, id uint, db *gorm.DB) (int, error) {

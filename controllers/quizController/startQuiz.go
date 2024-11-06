@@ -1,6 +1,7 @@
 package quizController
 
 import (
+	"mensina-be/core/dto"
 	"mensina-be/core/useCases/quizUseCase"
 	"mensina-be/utils"
 	"strconv"
@@ -14,7 +15,7 @@ import (
 // @Param quiz_id path string false "Quiz ID"
 // @Security BearerAuth
 // @Router /quiz/start/{quiz_id} [get]
-func StartQuiz(c *gin.Context) {
+func StartQuiz(c *gin.Context, quizRoutineChannel chan dto.QuizRoutineChannel) {
 	userId, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
@@ -33,7 +34,7 @@ func StartQuiz(c *gin.Context) {
 		return
 	}
 
-	status, err := quizUseCase.StartQuiz(userId, uint(quizId))
+	status, err := quizUseCase.StartQuiz(userId, uint(quizId), quizRoutineChannel)
 
 	if err != nil {
 		c.JSON(status, utils.ErrorResponse{
@@ -41,5 +42,5 @@ func StartQuiz(c *gin.Context) {
 		})
 		return
 	}
-
+	c.Status(status)
 }

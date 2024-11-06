@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"mensina-be/core/dto"
 	"mensina-be/docs"
 	"mensina-be/server/routes"
 
@@ -24,7 +25,7 @@ func NewServer() Server {
 	}
 }
 
-func (s *Server) Run() {
+func (s *Server) Run(quizRoutineChannel chan dto.QuizRoutineChannel) {
 
 	s.server.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -34,7 +35,7 @@ func (s *Server) Run() {
 		AllowCredentials: true,
 	}))
 
-	router := routes.ConfigRoutes(s.server)
+	router := routes.ConfigRoutes(s.server, quizRoutineChannel)
 
 	docs.SwaggerInfo.BasePath = "/"
 
