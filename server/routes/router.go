@@ -5,13 +5,13 @@ import (
 	"mensina-be/controllers/quizController"
 	"mensina-be/controllers/tagController"
 	"mensina-be/controllers/userController"
-	"mensina-be/core/dto"
+	"mensina-be/core/routines"
 	"mensina-be/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan dto.QuizRoutineChannel) *gin.Engine {
+func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCallback) *gin.Engine {
 
 	// AUTH routes
 	router.POST("login", loginController.Login)
@@ -32,7 +32,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan dto.QuizRoutineCha
 	{
 		quiz.GET("/", quizController.GetQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
-		quiz.GET("/answer_check", quizController.AnswerCheck)
+		quiz.GET("/answer_check", func(c *gin.Context) { quizController.AnswerCheck(c, quizRoutineChannel) })
 		quiz.GET("/start/:quiz_id", func(c *gin.Context) { quizController.StartQuiz(c, quizRoutineChannel) })
 	}
 

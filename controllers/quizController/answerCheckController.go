@@ -1,6 +1,7 @@
 package quizController
 
 import (
+	"mensina-be/core/routines"
 	"mensina-be/core/useCases/quizUseCase"
 	"mensina-be/utils"
 	"strconv"
@@ -20,7 +21,7 @@ type answerCheckResponse struct {
 // @Param question_id query string true "Question ID"
 // @Security BearerAuth
 // @Router /quiz/answer_check [get]
-func AnswerCheck(c *gin.Context) {
+func AnswerCheck(c *gin.Context, quizRoutineChannel chan routines.RoutineCallback) {
 	_answerId := c.Query("answer_id")
 	_questionId := c.Query("question_id")
 
@@ -42,7 +43,16 @@ func AnswerCheck(c *gin.Context) {
 		return
 	}
 
-	isCorrect, err := quizUseCase.AnswerCheck(answerId, questionId)
+	userId, err := utils.GetUserIdByToken(c)
+
+	if err != nil {
+		c.JSON(400, utils.ErrorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	isCorrect, err := quizUseCase.AnswerCheck(answerId, questionId, int(userId), quizRoutineChannel)
 
 	if err != nil {
 		c.JSON(500, utils.ErrorResponse{

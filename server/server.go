@@ -2,7 +2,7 @@ package server
 
 import (
 	"log"
-	"mensina-be/core/dto"
+	"mensina-be/core/routines"
 	"mensina-be/docs"
 	"mensina-be/server/routes"
 
@@ -25,7 +25,7 @@ func NewServer() Server {
 	}
 }
 
-func (s *Server) Run(quizRoutineChannel chan dto.QuizRoutineChannel) {
+func (s *Server) Run(quizRoutineChannel chan routines.RoutineCallback) {
 
 	s.server.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,

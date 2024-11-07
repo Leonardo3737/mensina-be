@@ -1,19 +1,28 @@
 package routines
 
 import (
-	"fmt"
 	"mensina-be/core/dto"
+	"sync"
 )
 
-func RunQuizRoutine(ch chan dto.QuizRoutineChannel) {
-	var Sections = make(map[int]*dto.QuizRoutineChannel)
+type QuizSessions map[string]*dto.QuizSession
+type RoutineCallback func(QuizSessions) *sync.WaitGroup
+
+func RunQuizRoutine(chCallback chan RoutineCallback) {
+	var quizSession = make(QuizSessions)
 	for {
-		sectionCh := <-ch
+		callback := <-chCallback
+		wg := callback(quizSession)
+		if wg != nil {
+			wg.Done()
+		}
+
+		/* sectionCh := <-ch
 		section, exist := Sections[int(sectionCh.UserId)]
 
 		if !exist {
 			fmt.Printf("Iniciando Quiz, userId: %d | quizId: %d\n", sectionCh.UserId, sectionCh.QuizzId)
-			Sections[int(sectionCh.UserId)] = &dto.QuizRoutineChannel{
+			Sections[int(sectionCh.UserId)] = &dto.QuizSession{
 				Total:   0,
 				Score:   0,
 				QuizzId: sectionCh.QuizzId,
@@ -33,6 +42,6 @@ func RunQuizRoutine(ch chan dto.QuizRoutineChannel) {
 			ch <- *section
 			fmt.Println("passou")
 			delete(Sections, int(sectionCh.UserId))
-		}
+		} */
 	}
 }
