@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/services"
@@ -12,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func UpdateUser(user *dto.UpdateUserDto, id uint) (int, error) {
+func UpdateUser(user *dto.UpdateUserDto, id uint) *config.RestErr {
 	db := database.GetDatabase()
 
 	var existingUser models.User
@@ -20,10 +21,10 @@ func UpdateUser(user *dto.UpdateUserDto, id uint) (int, error) {
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		// Erro inesperado (por exemplo, conexão com o banco)
-		return 500, fmt.Errorf("cannot checking username")
+		return config.NewInternaErr("cannot checking username")
 	} else if err == nil {
 		// Usuário já existe
-		return 409, fmt.Errorf("username already exists")
+		return config.NewConflictErr("username already exists")
 	}
 
 	fmt.Println(id)
@@ -39,12 +40,12 @@ func UpdateUser(user *dto.UpdateUserDto, id uint) (int, error) {
 		Updates(user)
 
 	if res.Error != nil {
-		return 500, fmt.Errorf("cannot update user")
+		return config.NewInternaErr("cannot update user")
 	}
 
 	if res.RowsAffected == 0 {
-		return 404, fmt.Errorf("cannot find user. id: %d", id)
+		return config.NewNotFoundErr(fmt.Sprintf("cannot find user. id: %d", id))
 	}
 
-	return 204, err
+	return nil
 }

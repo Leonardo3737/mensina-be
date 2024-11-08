@@ -400,14 +400,18 @@ const docTemplate = `{
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 6
                 },
                 "password": {
                     "type": "string",
+                    "maxLength": 50,
                     "minLength": 6
                 },
                 "username": {
                     "type": "string",
+                    "maxLength": 50,
                     "minLength": 3
                 }
             }
@@ -469,6 +473,9 @@ const docTemplate = `{
         "dto.QuizSession": {
             "type": "object",
             "properties": {
+                "correct": {
+                    "type": "integer"
+                },
                 "questions": {
                     "type": "object",
                     "additionalProperties": {
@@ -540,6 +547,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "integer"
+                },
+                "score": {
                     "type": "integer"
                 },
                 "tag": {

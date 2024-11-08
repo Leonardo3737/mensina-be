@@ -1,9 +1,9 @@
 package dto
 
 type CreateUserDto struct {
-	UserName string `json:"username" validate:"required,min=3"`
-	Password string `json:"password" validate:"required,min=6"`
-	Name     string `json:"name" validate:"required"`
+	UserName string `json:"username" binding:"required,min=3,max=50"`
+	Password string `json:"password" binding:"required,min=6,max=50"`
+	Name     string `json:"name" binding:"required,min=6,max=50"`
 }
 
 type UpdateUserDto struct {

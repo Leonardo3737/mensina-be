@@ -1,6 +1,7 @@
 package rankUseCase
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/database"
@@ -9,26 +10,31 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetRank() ([]dto.RankDto, int, error) {
+func GetRank() ([]dto.RankDto, *config.RestErr) {
 	db := database.GetDatabase()
 	groupByUsers := []models.UserCompletedQuiz{}
 	groupByQuiz := []models.UserCompletedQuiz{}
 
 	var wg sync.WaitGroup
-
+	var errGetGroupByUsers error
+	var errGetGroupByQuiz error
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		groupByUsers = getGroupByUsers(db)
+		groupByUsers, errGetGroupByUsers = getGroupByUsers(db)
 	}()
 	go func() {
 		defer wg.Done()
-		groupByQuiz = getGroupByQuiz(db)
+		groupByQuiz, errGetGroupByQuiz = getGroupByQuiz(db)
 	}()
 
 	wg.Wait()
 
 	var rank []dto.RankDto
+
+	if errGetGroupByQuiz != nil || errGetGroupByUsers != nil {
+		return rank, config.NewInternaErr("cannot calculate rank")
+	}
 
 	for i, u := range groupByUsers {
 		rank = append(rank, dto.RankDto{
@@ -52,31 +58,31 @@ func GetRank() ([]dto.RankDto, int, error) {
 		rank[i].TotalScore = totalScore
 	}
 
-	return rank, 200, nil
+	return rank, nil
 }
 
-func getGroupByUsers(db *gorm.DB) []models.UserCompletedQuiz {
+func getGroupByUsers(db *gorm.DB) ([]models.UserCompletedQuiz, error) {
 	var groupByUsers []models.UserCompletedQuiz
-	db.
+	err := db.
 		Model(&models.UserCompletedQuiz{}).
 		Select("user_id").
 		Group("user_id").
 		Preload("User").
 		Where("score > ?", 0).
-		Find(&groupByUsers)
+		Find(&groupByUsers).Error
 
-	return groupByUsers
+	return groupByUsers, err
 }
 
-func getGroupByQuiz(db *gorm.DB) []models.UserCompletedQuiz {
+func getGroupByQuiz(db *gorm.DB) ([]models.UserCompletedQuiz, error) {
 	var groupByQuiz []models.UserCompletedQuiz
-	db.
+	err := db.
 		Model(&models.UserCompletedQuiz{}).
 		Select("quiz_id, user_id, MAX(score) as score").
 		Group("quiz_id, user_id").
 		Order("score ASC").
 		Preload("Quiz").
-		Find(&groupByQuiz)
+		Find(&groupByQuiz).Error
 
-	return groupByQuiz
+	return groupByQuiz, err
 }

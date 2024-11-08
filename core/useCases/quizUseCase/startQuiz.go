@@ -3,6 +3,7 @@ package quizUseCase
 import (
 	"errors"
 	"fmt"
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/routines"
@@ -13,18 +14,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func StartQuiz(userId, quizId uint, quizRoutineChannel chan routines.RoutineCallback) (dto.QuizSession, int, error) {
+func StartQuiz(userId, quizId uint, quizRoutineChannel chan routines.RoutineCallback) (dto.QuizSession, *config.RestErr) {
 	db := database.GetDatabase()
 
 	var user models.User
-
-	if status, err := getEntity(&user, userId, db); err != nil {
-		return dto.QuizSession{}, status, err
+	if err := getEntity(&user, userId, db); err != nil {
+		return dto.QuizSession{}, err
 	}
 
 	var quiz models.Quiz
-	if status, err := getEntity(&quiz, quizId, db); err != nil {
-		return dto.QuizSession{}, status, err
+	if err := getEntity(&quiz, quizId, db); err != nil {
+		return dto.QuizSession{}, err
 	}
 
 	var wg sync.WaitGroup
@@ -54,18 +54,18 @@ func StartQuiz(userId, quizId uint, quizRoutineChannel chan routines.RoutineCall
 
 	wg.Wait()
 
-	return _quizSession, 200, nil
+	return _quizSession, nil
 }
 
-func getEntity(model interface{}, id uint, db *gorm.DB) (int, error) {
+func getEntity(model interface{}, id uint, db *gorm.DB) *config.RestErr {
 
 	if err := db.First(model, id).Error; err != nil {
 		// Verifica se o erro indica que o registro não foi encontrado
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return 404, errors.New("quiz not found")
+			return config.NewNotFoundErr("quiz not found")
 		}
 		// Caso contrário, retorna o erro do banco de dados
-		return 500, errors.New("internal server error")
+		return config.NewInternaErr("internal server error")
 	}
-	return 200, nil
+	return nil
 }

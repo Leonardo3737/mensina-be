@@ -3,11 +3,15 @@ definitions:
   dto.CreateUserDto:
     properties:
       name:
+        maxLength: 50
+        minLength: 6
         type: string
       password:
+        maxLength: 50
         minLength: 6
         type: string
       username:
+        maxLength: 50
         minLength: 3
         type: string
     required:
@@ -52,6 +56,8 @@ definitions:
     type: object
   dto.QuizSession:
     properties:
+      correct:
+        type: integer
       questions:
         additionalProperties:
           $ref: '#/definitions/dto.Status'
@@ -100,6 +106,8 @@ definitions:
   models.Quiz:
     properties:
       id:
+        type: integer
+      score:
         type: integer
       tag:
         $ref: '#/definitions/models.Tag'

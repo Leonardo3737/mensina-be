@@ -1,6 +1,7 @@
 package userController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 
@@ -16,18 +17,13 @@ func DeleteUser(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(401, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewUnauthorizedErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	err = userUseCase.DeleteUser(id)
-
-	if err != nil {
-		c.JSON(404, utils.ErrorResponse{
-			Error: "cannot find user",
-		})
+	if restErr := userUseCase.DeleteUser(id); restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 

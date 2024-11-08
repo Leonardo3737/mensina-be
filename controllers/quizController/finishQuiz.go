@@ -1,6 +1,7 @@
 package quizController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/routines"
 	"mensina-be/core/useCases/quizUseCase"
 	"mensina-be/utils"
@@ -19,18 +20,16 @@ func FinishQuiz(c *gin.Context, ch chan routines.RoutineCallback) {
 	userId, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(401, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewUnauthorizedErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
 	quizIdStr := c.Param("quiz_id")
 	quizId, err := strconv.Atoi(quizIdStr)
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "Invalid quiz ID",
-		})
+		restErr := config.NewBadRequestErr("Invalid quiz ID")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 	quizUseCase.FinishQuiz(uint(quizId), userId, ch)

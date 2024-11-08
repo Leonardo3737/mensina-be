@@ -1,9 +1,10 @@
 package loginController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/useCases/loginUseCase"
-	"mensina-be/utils"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,20 +22,17 @@ func Login(c *gin.Context) {
 	err := c.ShouldBindJSON(&_login)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "cannot bind JSON",
-		})
+		restErr := config.NewBadRequestErr("cannot bind JSON")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	res, status, err := loginUseCase.Login(&_login)
+	res, restErr := loginUseCase.Login(&_login)
 
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+	if restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	c.JSON(status, res)
+	c.JSON(http.StatusOK, res)
 }

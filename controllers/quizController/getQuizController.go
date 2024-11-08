@@ -1,8 +1,8 @@
 package quizController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/quizUseCase"
-	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,9 +20,8 @@ func GetQuiz(c *gin.Context) {
 	quizzes, err := quizUseCase.GetQuizzes(tagId)
 
 	if err != nil {
-		c.JSON(500, utils.ErrorResponse{
-			Error: "cannot list users",
-		})
+		restErr := config.NewInternaErr("cannot list quizzes")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 

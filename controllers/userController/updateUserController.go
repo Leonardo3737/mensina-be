@@ -1,6 +1,7 @@
 package userController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
@@ -18,31 +19,24 @@ func UpdateUser(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(401, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewUnauthorizedErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
 	var _user dto.UpdateUserDto
 
-	err = c.ShouldBindJSON(&_user)
-
-	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "cannot bind JSON",
-		})
+	if err := c.ShouldBindJSON(&_user); err != nil {
+		restErr := config.NewBadRequestErr("some field are incorrect")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	status, err := userUseCase.UpdateUser(&_user, id)
+	restErr := userUseCase.UpdateUser(&_user, id)
 
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+	if restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
-
-	c.Status(status)
+	c.Status(204)
 }

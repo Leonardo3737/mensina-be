@@ -1,8 +1,8 @@
 package quizUseCase
 
 import (
-	"errors"
 	"fmt"
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/routines"
@@ -11,26 +11,24 @@ import (
 	"sync"
 )
 
-func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routines.RoutineCallback) (bool, int, error) {
+func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routines.RoutineCallback) (bool, *config.RestErr) {
 	db := database.GetDatabase()
 
 	var answer models.Answer
 
 	if err := db.Preload("Question").First(&answer, answerId).Error; err != nil {
-		return false, 404, fmt.Errorf("cannot find answer: %d", answerId)
+		return false, config.NewNotFoundErr(fmt.Sprintf("cannot find answer: %d", answerId))
 	}
 
 	var wg sync.WaitGroup
 
-	status := 200
-	var err error = nil
+	var err *config.RestErr
 	isCorrect := answer.IsCorrect && answer.QuestionId == uint(questionId)
 
 	wg.Add(1)
 	quizRoutineChannel <- func(quizSessions routines.QuizSessions) *sync.WaitGroup {
 		if answer.QuestionId != uint(questionId) {
-			err = errors.New("this answer is not related to this question")
-			status = 400
+			err = config.NewBadRequestErr("this answer is not related to this question")
 			return &wg
 		}
 
@@ -39,13 +37,11 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 
 		fmt.Printf("quizID: %s\n", sessionKey)
 		if !exist || quizSession.Total == 5 {
-			err = errors.New("this quiz is not in progress")
-			status = 404
+			err = config.NewNotFoundErr("this quiz is not in progress")
 			return &wg
 		}
 		if quizSession.Questions[questionId] != dto.Unanswered {
-			err = errors.New("this question has already been answered")
-			status = 400
+			err = config.NewBadRequestErr("this question has already been answered")
 			return &wg
 		}
 
@@ -73,5 +69,5 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 		return &wg
 	}
 	wg.Wait()
-	return isCorrect, status, err
+	return isCorrect, err
 }

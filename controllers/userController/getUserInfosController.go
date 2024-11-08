@@ -1,6 +1,7 @@
 package userController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/userUseCase"
 	"mensina-be/utils"
 
@@ -17,18 +18,16 @@ func GetUserInfos(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(401, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewUnauthorizedErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
 	user, err := userUseCase.GetUserInfos(id)
 
 	if err != nil {
-		c.JSON(404, utils.ErrorResponse{
-			Error: "cannot find user",
-		})
+		restErr := config.NewNotFoundErr("cannot find user")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 

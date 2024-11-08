@@ -1,8 +1,8 @@
 package tagController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/tagUseCase"
-	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +17,8 @@ func GetTags(c *gin.Context) {
 	tags, err := tagUseCase.GetTags()
 
 	if err != nil {
-		c.JSON(500, utils.ErrorResponse{
-			Error: "internal server error",
-		})
+		restErr := config.NewInternaErr("cannot list tags")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 	c.JSON(200, tags)

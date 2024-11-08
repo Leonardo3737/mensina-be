@@ -1,8 +1,8 @@
 package userController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/userUseCase"
-	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,9 +16,8 @@ func GetUsers(c *gin.Context) {
 	users, err := userUseCase.GetUsers()
 
 	if err != nil {
-		c.JSON(500, utils.ErrorResponse{
-			Error: "cannot list users",
-		})
+		restErr := config.NewInternaErr("cannot list users")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 

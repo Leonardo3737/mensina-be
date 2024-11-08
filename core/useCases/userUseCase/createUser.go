@@ -2,36 +2,27 @@ package userUseCase
 
 import (
 	"errors"
-	"fmt"
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/models"
 	"mensina-be/core/services"
 	"mensina-be/database"
 
-	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
-var validate = validator.New()
-
-func CreateUser(user *dto.CreateUserDto) (models.User, int, error) {
-
-	err := validate.Struct(user)
-	if err != nil {
-		return models.User{}, 400, err
-	}
-
+func CreateUser(user *dto.CreateUserDto) (models.User, *config.RestErr) {
 	db := database.GetDatabase()
 
 	var existingUser models.User
-	err = db.Where("user_name = ?", user.UserName).First(&existingUser).Error
+	err := db.Where("user_name = ?", user.UserName).First(&existingUser).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		// Erro inesperado (por exemplo, conexão com o banco)
-		return models.User{}, 500, fmt.Errorf("cannot checking username")
+		return models.User{}, config.NewInternaErr("cannot checking username")
 	} else if err == nil {
 		// Usuário já existe
-		return models.User{}, 409, fmt.Errorf("username already exists")
+		return models.User{}, config.NewConflictErr("username already exists")
 	}
 
 	// Criptografar senha
@@ -44,8 +35,8 @@ func CreateUser(user *dto.CreateUserDto) (models.User, int, error) {
 	err = db.Create(&newUser).Error
 
 	if err != nil {
-		return models.User{}, 500, fmt.Errorf("cannot create user")
+		return models.User{}, config.NewInternaErr("cannot create user")
 	}
 
-	return newUser, 201, err
+	return newUser, nil
 }

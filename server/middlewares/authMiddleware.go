@@ -1,8 +1,8 @@
 package middlewares
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/services"
-	"mensina-be/utils"
 	"strconv"
 	"strings"
 
@@ -54,10 +54,8 @@ func AuthById() gin.HandlerFunc {
 		id, err := strconv.Atoi(_id)
 
 		if err != nil {
-			c.JSON(400, utils.ErrorResponse{
-				Error: "ID has to be integer",
-			})
-			return
+			restErr := config.NewBadRequestErr("ID has to be integer")
+			c.JSON(restErr.Code, restErr)
 		}
 
 		if id != int(tokenId) {

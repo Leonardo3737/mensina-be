@@ -2,7 +2,7 @@ package rankController
 
 import (
 	"mensina-be/core/useCases/rankUseCase"
-	"mensina-be/utils"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,13 +14,11 @@ import (
 // @Success 200 {array} dto.RankDto "Success"
 // @Router /rank [get]
 func GetRank(c *gin.Context) {
-	rank, status, err := rankUseCase.GetRank()
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: "cannot list users",
-		})
+	rank, restErr := rankUseCase.GetRank()
+	if restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	c.JSON(status, rank)
+	c.JSON(http.StatusOK, rank)
 }

@@ -1,8 +1,8 @@
 package quizController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/useCases/quizUseCase"
-	"mensina-be/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -21,17 +21,15 @@ func GetQuestionByQuiz(c *gin.Context) {
 	id, err := strconv.Atoi(_id)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "ID has to be integer",
-		})
+		restErr := config.NewBadRequestErr("ID has to be integer")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 	questions, err := quizUseCase.GetQuestionByQuiz(id)
 
 	if err != nil {
-		c.JSON(404, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewNotFoundErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 

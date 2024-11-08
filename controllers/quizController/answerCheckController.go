@@ -1,9 +1,11 @@
 package quizController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/routines"
 	"mensina-be/core/useCases/quizUseCase"
 	"mensina-be/utils"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,40 +30,35 @@ func AnswerCheck(c *gin.Context, quizRoutineChannel chan routines.RoutineCallbac
 	answerId, err := strconv.Atoi(_answerId)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "answer_id must be integer",
-		})
+		restErr := config.NewBadRequestErr("answer_id must be integer")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
 	questionId, err := strconv.Atoi(_questionId)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "question_id must be integer",
-		})
+		restErr := config.NewBadRequestErr("question_id must be integer")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
 	userId, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+		restErr := config.NewBadRequestErr(err.Error())
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	isCorrect, status, err := quizUseCase.AnswerCheck(answerId, questionId, int(userId), quizRoutineChannel)
+	isCorrect, restErr := quizUseCase.AnswerCheck(answerId, questionId, int(userId), quizRoutineChannel)
 
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+	if restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	c.JSON(200, answerCheckResponse{
+	c.JSON(http.StatusOK, answerCheckResponse{
 		IsCorrect: isCorrect,
 	})
 }

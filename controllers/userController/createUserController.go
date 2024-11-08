@@ -1,9 +1,9 @@
 package userController
 
 import (
+	"mensina-be/config"
 	"mensina-be/core/dto"
 	"mensina-be/core/useCases/userUseCase"
-	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,23 +18,18 @@ import (
 func CreateUser(c *gin.Context) {
 	var _user dto.CreateUserDto
 
-	err := c.ShouldBindJSON(&_user)
-
-	if err != nil {
-		c.JSON(400, utils.ErrorResponse{
-			Error: "cannot bind JSON",
-		})
+	if err := c.ShouldBindJSON(&_user); err != nil {
+		restErr := config.NewBadRequestErr("some field are incorrect")
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	newUser, status, err := userUseCase.CreateUser(&_user)
+	newUser, restErr := userUseCase.CreateUser(&_user)
 
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: err.Error(),
-		})
+	if restErr != nil {
+		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	c.JSON(status, newUser)
+	c.JSON(201, newUser)
 }
