@@ -1,10 +1,13 @@
 package models
 
+import "time"
+
 type UserCompletedQuiz struct {
-	ID     uint `json:"id" gorm:"primaryKey"`
-	Score  int  `json:"score"`
-	UserId uint `json:"userId"`
-	User   Quiz `gorm:"foreignKey:UserId"`
-	QuizId uint `json:"quizId"`
-	Quiz   Quiz `gorm:"foreignKey:QuizId"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	Score     int       `json:"score"`
+	UserId    uint      `json:"userId"`
+	User      User      `gorm:"foreignKey:UserId"`
+	QuizId    uint      `json:"quizId"`
+	Quiz      Quiz      `gorm:"foreignKey:QuizId"`
+	CreatedAt time.Time `json:"createdAt" gorm:"type:timestamp;default:current_timestamp"`
 }

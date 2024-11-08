@@ -50,6 +50,44 @@ definitions:
       token:
         type: string
     type: object
+  dto.QuizSession:
+    properties:
+      questions:
+        additionalProperties:
+          $ref: '#/definitions/dto.Status'
+        type: object
+      quizzId:
+        type: integer
+      score:
+        type: integer
+      total:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  dto.RankDto:
+    properties:
+      bestScoreQuizId:
+        type: integer
+      bestScoreQuizTitle:
+        type: string
+      totalScore:
+        type: integer
+      userId:
+        type: integer
+      username:
+        type: string
+    type: object
+  dto.Status:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - Unanswered
+    - InCorrect
+    - Correct
   dto.UpdateUserDto:
     properties:
       name:
@@ -174,6 +212,22 @@ paths:
       summary: Check
       tags:
       - Quiz
+  /quiz/finish/{quiz_id}:
+    delete:
+      parameters:
+      - description: Quiz ID
+        in: path
+        name: quiz_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Success
+      security:
+      - BearerAuth: []
+      summary: Finish quiz
+      tags:
+      - Quiz
   /quiz/questions/{quiz_id}:
     get:
       parameters:
@@ -202,15 +256,34 @@ paths:
       - description: Quiz ID
         in: path
         name: quiz_id
+        required: true
         type: string
       responses:
         "200":
-          description: OK
+          description: Success
+          schema:
+            $ref: '#/definitions/dto.QuizSession'
       security:
       - BearerAuth: []
       summary: Start quiz
       tags:
       - Quiz
+  /rank:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/dto.RankDto'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get rank
+      tags:
+      - Rank
   /tag:
     get:
       produces:

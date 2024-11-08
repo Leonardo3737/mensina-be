@@ -52,10 +52,10 @@ func AnswerCheck(c *gin.Context, quizRoutineChannel chan routines.RoutineCallbac
 		return
 	}
 
-	isCorrect, err := quizUseCase.AnswerCheck(answerId, questionId, int(userId), quizRoutineChannel)
+	isCorrect, status, err := quizUseCase.AnswerCheck(answerId, questionId, int(userId), quizRoutineChannel)
 
 	if err != nil {
-		c.JSON(500, utils.ErrorResponse{
+		c.JSON(status, utils.ErrorResponse{
 			Error: err.Error(),
 		})
 		return

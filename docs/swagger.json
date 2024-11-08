@@ -117,6 +117,33 @@
                 }
             }
         },
+        "/quiz/finish/{quiz_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Finish quiz",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Quiz ID",
+                        "name": "quiz_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/quiz/questions/{quiz_id}": {
             "get": {
                 "security": [
@@ -169,12 +196,43 @@
                         "type": "string",
                         "description": "Quiz ID",
                         "name": "quiz_id",
-                        "in": "path"
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuizSession"
+                        }
+                    }
+                }
+            }
+        },
+        "/rank": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rank"
+                ],
+                "summary": "Get rank",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.RankDto"
+                            }
+                        }
                     }
                 }
             }
@@ -401,6 +459,62 @@
                     "type": "string"
                 }
             }
+        },
+        "dto.QuizSession": {
+            "type": "object",
+            "properties": {
+                "questions": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/dto.Status"
+                    }
+                },
+                "quizzId": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.RankDto": {
+            "type": "object",
+            "properties": {
+                "bestScoreQuizId": {
+                    "type": "integer"
+                },
+                "bestScoreQuizTitle": {
+                    "type": "string"
+                },
+                "totalScore": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.Status": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "Unanswered",
+                "InCorrect",
+                "Correct"
+            ]
         },
         "dto.UpdateUserDto": {
             "type": "object",

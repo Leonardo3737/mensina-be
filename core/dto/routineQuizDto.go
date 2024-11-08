@@ -20,9 +20,10 @@ func (s Status) String() string {
 }
 
 type QuizSession struct {
-	Score     int
-	UserId    uint
-	Total     int
-	QuizzId   uint
-	Questions map[int]Status
+	Score     int            `json:"score"`
+	Total     int            `json:"total"`
+	Correct   int            `json:"correct"`
+	UserId    uint           `json:"userId"`
+	QuizzId   uint           `json:"quizzId"`
+	Questions map[int]Status `json:"questions"`
 }

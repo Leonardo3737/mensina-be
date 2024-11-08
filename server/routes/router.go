@@ -3,6 +3,7 @@ package routes
 import (
 	"mensina-be/controllers/loginController"
 	"mensina-be/controllers/quizController"
+	"mensina-be/controllers/rankController"
 	"mensina-be/controllers/tagController"
 	"mensina-be/controllers/userController"
 	"mensina-be/core/routines"
@@ -34,11 +35,19 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
 		quiz.GET("/answer_check", func(c *gin.Context) { quizController.AnswerCheck(c, quizRoutineChannel) })
 		quiz.GET("/start/:quiz_id", func(c *gin.Context) { quizController.StartQuiz(c, quizRoutineChannel) })
+		quiz.DELETE("/finish/:quiz_id", func(c *gin.Context) { quizController.FinishQuiz(c, quizRoutineChannel) })
 	}
 
+	// TAG routes
 	tag := router.Group("tag", middlewares.Auth())
 	{
 		tag.GET("/", tagController.GetTags)
+	}
+
+	// RANK routes
+	rank := router.Group("rank", middlewares.Auth())
+	{
+		rank.GET("/", rankController.GetRank)
 	}
 
 	return router

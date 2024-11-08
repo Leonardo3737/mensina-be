@@ -9,13 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary Start quiz
+// @Summary Finish quiz
 // @Tags Quiz
-// @Success 200 {object} dto.QuizSession "Success"
+// @Success 204 "Success"
 // @Param quiz_id path string true "Quiz ID"
 // @Security BearerAuth
-// @Router /quiz/start/{quiz_id} [get]
-func StartQuiz(c *gin.Context, quizRoutineChannel chan routines.RoutineCallback) {
+// @Router /quiz/finish/{quiz_id} [delete]
+func FinishQuiz(c *gin.Context, ch chan routines.RoutineCallback) {
 	userId, err := utils.GetUserIdByToken(c)
 
 	if err != nil {
@@ -33,14 +33,6 @@ func StartQuiz(c *gin.Context, quizRoutineChannel chan routines.RoutineCallback)
 		})
 		return
 	}
-
-	quizSession, status, err := quizUseCase.StartQuiz(userId, uint(quizId), quizRoutineChannel)
-
-	if err != nil {
-		c.JSON(status, utils.ErrorResponse{
-			Error: err.Error(),
-		})
-		return
-	}
-	c.JSON(status, quizSession)
+	quizUseCase.FinishQuiz(uint(quizId), userId, ch)
+	c.Status(204)
 }
