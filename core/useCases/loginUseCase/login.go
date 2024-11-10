@@ -3,9 +3,9 @@ package loginUseCase
 import (
 	"mensina-be/config"
 	"mensina-be/core/dto"
-	"mensina-be/core/models"
 	"mensina-be/core/services"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func Login(login *dto.InputLoginDto) (dto.OutputToken, *config.RestErr) {

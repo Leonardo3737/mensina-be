@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"mensina-be/core/models"
+	"mensina-be/database/models"
 
 	"gorm.io/gorm"
 )

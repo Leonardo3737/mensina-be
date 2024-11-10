@@ -2,8 +2,10 @@ package rankUseCase
 
 import (
 	"mensina-be/config"
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
+
+	"gorm.io/gorm"
 )
 
 func GetRank(updateRank bool) ([]models.Rank, *config.RestErr) {
@@ -15,7 +17,14 @@ func GetRank(updateRank bool) ([]models.Rank, *config.RestErr) {
 		UpdateRank()
 	}
 
-	err := db.Preload("User").Preload("BestScoreQuiz.Tag").Find(&rank).Error
+	err := db.
+	Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id", "name", "user_name")
+	}).
+	Preload("BestScoreQuiz.Tag").
+	Order("total_score DESC").
+	Find(&rank).
+	Error
 
 	if err != nil {
 		return rank, config.NewInternaErr("cannot list rank")

@@ -1,8 +1,8 @@
 package quizUseCase
 
 import (
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func GetQuizzes(tagId string) ([]models.Quiz, error) {

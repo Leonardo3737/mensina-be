@@ -2,11 +2,11 @@ package quizUseCase
 
 import (
 	"fmt"
-	"mensina-be/core/models"
 	"mensina-be/core/routines"
 	"mensina-be/core/services"
 	"mensina-be/core/useCases/rankUseCase"
 	"mensina-be/database"
+	"mensina-be/database/models"
 	"sync"
 )
 

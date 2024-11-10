@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"mensina-be/config"
 	"mensina-be/core/dto"
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 	"sync"
 
 	"gorm.io/gorm"

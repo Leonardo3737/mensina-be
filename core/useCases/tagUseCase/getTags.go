@@ -1,8 +1,8 @@
 package tagUseCase
 
 import (
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func GetTags() ([]models.Tag, error) {

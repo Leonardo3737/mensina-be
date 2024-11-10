@@ -3,8 +3,8 @@ package quizUseCase
 import (
 	"fmt"
 	"mensina-be/core/dto"
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func GetQuestionByQuiz(id int) ([]dto.OutputQuestionDto, error) {

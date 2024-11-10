@@ -2,8 +2,8 @@ package userUseCase
 
 import (
 	"mensina-be/config"
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func DeleteUser(id uint) *config.RestErr {

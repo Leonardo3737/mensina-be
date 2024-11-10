@@ -6,9 +6,9 @@ import (
 	"log"
 	"mensina-be/config"
 	"mensina-be/core/dto"
-	"mensina-be/core/models"
 	"mensina-be/core/services"
 	"mensina-be/database"
+	"mensina-be/database/models"
 
 	"gorm.io/gorm"
 )

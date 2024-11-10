@@ -1,8 +1,8 @@
 package userUseCase
 
 import (
-	"mensina-be/core/models"
 	"mensina-be/database"
+	"mensina-be/database/models"
 )
 
 func GetUserInfos(id uint) (models.User, error) {
