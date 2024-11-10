@@ -46,11 +46,6 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 		}
 
 		quizSession.Total++
-		if quizSession.Total == 5 {
-			defer func() {
-				go FinishQuiz(quizSession.QuizzId, quizSession.UserId, quizRoutineChannel)
-			}()
-		}
 
 		if !isCorrect {
 			quizSession.Questions[questionId] = dto.InCorrect
@@ -64,8 +59,12 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 		if quizSession.Total > 3 && quizSession.Total == quizSession.Correct {
 			scoreToAdd = 3
 		}
+
 		quizSession.Score += scoreToAdd
 
+		if quizSession.Total == 5 {
+			go FinishQuiz(quizSession.QuizzId, quizSession.UserId, quizRoutineChannel)
+		}
 		return &wg
 	}
 	wg.Wait()

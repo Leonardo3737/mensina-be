@@ -230,13 +230,21 @@ const docTemplate = `{
                     "Rank"
                 ],
                 "summary": "Get rank",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Update Rank",
+                        "name": "update_rank",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.RankDto"
+                                "$ref": "#/definitions/models.Rank"
                             }
                         }
                     }
@@ -496,26 +504,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.RankDto": {
-            "type": "object",
-            "properties": {
-                "bestScoreQuizId": {
-                    "type": "integer"
-                },
-                "bestScoreQuizTitle": {
-                    "type": "string"
-                },
-                "totalScore": {
-                    "type": "integer"
-                },
-                "userId": {
-                    "type": "integer"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.Status": {
             "type": "integer",
             "enum": [
@@ -560,6 +548,29 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Rank": {
+            "type": "object",
+            "properties": {
+                "bestScoreQuiz": {
+                    "$ref": "#/definitions/models.Quiz"
+                },
+                "bestScoreQuizId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "totalScore": {
+                    "type": "integer"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "userId": {
+                    "type": "integer"
                 }
             }
         },

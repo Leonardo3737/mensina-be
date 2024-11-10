@@ -71,19 +71,6 @@ definitions:
       userId:
         type: integer
     type: object
-  dto.RankDto:
-    properties:
-      bestScoreQuizId:
-        type: integer
-      bestScoreQuizTitle:
-        type: string
-      totalScore:
-        type: integer
-      userId:
-        type: integer
-      username:
-        type: string
-    type: object
   dto.Status:
     enum:
     - 0
@@ -115,6 +102,21 @@ definitions:
         type: integer
       title:
         type: string
+    type: object
+  models.Rank:
+    properties:
+      bestScoreQuiz:
+        $ref: '#/definitions/models.Quiz'
+      bestScoreQuizId:
+        type: integer
+      id:
+        type: integer
+      totalScore:
+        type: integer
+      user:
+        $ref: '#/definitions/models.User'
+      userId:
+        type: integer
     type: object
   models.Tag:
     properties:
@@ -278,6 +280,11 @@ paths:
       - Quiz
   /rank:
     get:
+      parameters:
+      - description: Update Rank
+        in: query
+        name: update_rank
+        type: boolean
       produces:
       - application/json
       responses:
@@ -285,7 +292,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/dto.RankDto'
+              $ref: '#/definitions/models.Rank'
             type: array
       security:
       - BearerAuth: []

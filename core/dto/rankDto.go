@@ -7,3 +7,9 @@ type RankDto struct {
 	Username           string `json:"username"`
 	BestScoreQuizTitle string `json:"bestScoreQuizTitle"`
 }
+
+type UpdateRankDto struct {
+	TotalScore      int  `json:"totalScore"`
+	UserId          uint `json:"userId"`
+	BestScoreQuizId uint `json:"bestScoreQuizId"`
+}

@@ -10,11 +10,15 @@ import (
 // @Summary Get rank
 // @Tags Rank
 // @Produce json
+// @Param update_rank query boolean false "Update Rank"
 // @Security BearerAuth
-// @Success 200 {array} dto.RankDto "Success"
+// @Success 200 {array} models.Rank "Success"
 // @Router /rank [get]
 func GetRank(c *gin.Context) {
-	rank, restErr := rankUseCase.GetRank()
+	updateRank := c.Query("update_rank") == "true"
+
+	rank, restErr := rankUseCase.GetRank(updateRank)
+
 	if restErr != nil {
 		c.JSON(restErr.Code, restErr)
 		return

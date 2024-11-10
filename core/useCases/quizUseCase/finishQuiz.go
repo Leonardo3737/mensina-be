@@ -5,6 +5,7 @@ import (
 	"mensina-be/core/models"
 	"mensina-be/core/routines"
 	"mensina-be/core/services"
+	"mensina-be/core/useCases/rankUseCase"
 	"mensina-be/database"
 	"sync"
 )
@@ -30,7 +31,9 @@ func FinishQuiz(quizId, userId uint, quizRoutineChannel chan routines.RoutineCal
 			err := db.Create(&userCompletedQuiz).Error
 			if err != nil {
 				fmt.Println(err.Error())
+				return nil
 			}
+			go rankUseCase.UpdateRank()
 		}
 
 		fmt.Println("quiz finalizado")

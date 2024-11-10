@@ -13,4 +13,5 @@ func RunMigrations(db *gorm.DB) {
 	db.AutoMigrate(models.Question{})
 	db.AutoMigrate(models.UserCompletedQuiz{})
 	db.AutoMigrate(models.Tag{})
+	db.AutoMigrate(models.Rank{})
 }
