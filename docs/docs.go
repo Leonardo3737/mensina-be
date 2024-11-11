@@ -409,6 +409,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/icon/{user_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Obter ícone de usuário",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "USER ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ícone do usuário em PNG",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
         "/user/kpi": {
             "get": {
                 "security": [
@@ -705,6 +738,9 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "iconPath": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
