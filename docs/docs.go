@@ -373,6 +373,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/icon": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Upload de ícone de usuário",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Imagem do ícone do usuário (PNG, JPEG, etc.)",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Imagem processada com sucesso",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/kpi": {
             "get": {
                 "security": [
@@ -502,13 +538,19 @@ const docTemplate = `{
         "dto.QuizRank": {
             "type": "object",
             "properties": {
-                "quiz": {
-                    "$ref": "#/definitions/models.Quiz"
-                },
                 "quizId": {
                     "type": "integer"
                 },
+                "quizTitle": {
+                    "type": "string"
+                },
                 "score": {
+                    "type": "integer"
+                },
+                "tagDescription": {
+                    "type": "string"
+                },
+                "tagId": {
                     "type": "integer"
                 }
             }
@@ -555,13 +597,13 @@ const docTemplate = `{
         "dto.TagRank": {
             "type": "object",
             "properties": {
-                "score": {
-                    "type": "integer"
-                },
-                "tag": {
-                    "$ref": "#/definitions/models.Tag"
+                "tagDescription": {
+                    "type": "string"
                 },
                 "tagId": {
+                    "type": "integer"
+                },
+                "totalscore": {
                     "type": "integer"
                 }
             }
@@ -583,9 +625,6 @@ const docTemplate = `{
         "dto.UserKpiDto": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "quizzesRank": {
                     "type": "array",
                     "items": {
@@ -597,6 +636,12 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/dto.TagRank"
                     }
+                },
+                "totaScore": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
                 }
             }
         },

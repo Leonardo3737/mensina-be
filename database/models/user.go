@@ -7,4 +7,5 @@ type User struct {
 	UserName string `json:"username" validate:"required,min=3"`
 	Password string `json:"password" validate:"required,min=6"`
 	Name     string `json:"name" validate:"required"`
+	IconPath string
 }
