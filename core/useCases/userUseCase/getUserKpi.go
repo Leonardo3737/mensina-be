@@ -5,45 +5,79 @@ import (
 	"mensina-be/core/dto"
 	"mensina-be/database"
 	"mensina-be/database/models"
+	"sync"
 
 	"gorm.io/gorm"
 )
 
-type dataChannel struct {
-	err  error
-	data []models.UserCompletedQuiz
-}
-
 func GetUserKpi(userId uint) (dto.UserKpiDto, *config.RestErr) {
 	db := database.GetDatabase()
-	ch := make(chan dataChannel)
+	var wg sync.WaitGroup
+	var tagsRank []dto.TagRank
+	var quizzesRank []dto.QuizRank
 
-	go getUserCompletedQuiz(userId, db, ch)
+	wg.Add(2)
 
-	user, userErr := GetUserInfos(userId)
-	dataChannel := <-ch
-	if dataChannel.err != nil || userErr != nil {
-		return dto.UserKpiDto{}, config.NewInternaErr("cannot calculate kpi")
+	go func() {
+		getQuizRank(userId, db, &quizzesRank)
+		wg.Done()
+	}()
+	go func() {
+		getTagRank(userId, db, &tagsRank)
+		wg.Done()
+	}()
+
+	wg.Wait()
+
+	totalScore := 0
+
+	for _, tagRank := range tagsRank {
+		totalScore += tagRank.TotalScore
 	}
+
 	userKpi := dto.UserKpiDto{
-		UserId: user.ID,
-		QuizzesRank: make([]dto.QuizRank, 0, len(dataChannel.data)),
-		TagsRank: make([]dto.TagRank, 0, len(dataChannel.data)),
+		UserId:      userId,
+		QuizzesRank: quizzesRank,
+		TagsRank:    tagsRank,
+		TotalScore:  totalScore,
 	}
-	
+
+	return userKpi, nil
 }
 
-func getUserCompletedQuiz(userId uint, db *gorm.DB, ch chan dataChannel) {
-	var userCompletedQuiz []models.UserCompletedQuiz 
-	err := db.
-	Preload("Quiz").
-	Where("user_id = ?", userId).
-	Order("score DESC").
-	Find(&userCompletedQuiz).Error
+func getQuizRank(userId uint, db *gorm.DB, quizRank *[]dto.QuizRank) {
+	db.
+		Model(&models.UserCompletedQuiz{}).
+		Select(`
+		quiz_id, 
+		q.title as quiz_title, 
+		q.tag_id as tag_id, 
+		t.description as tag_description, 
+		MAX(score) AS score`).
+		InnerJoins("INNER JOIN quizzes q on q.id = user_completed_quizzes.quiz_id").
+		InnerJoins("INNER JOIN tags t on t.id = q.tag_id").
+		Where("user_id = ?", userId).
+		Group("quiz_id").
+		Order("score DESC").
+		Find(&quizRank)
+}
 
-	dataChannel := dataChannel{
-		err: err,
-		data: userCompletedQuiz,
-	}
-	ch <- dataChannel
+func getTagRank(userId uint, db *gorm.DB, tagRank *[]dto.TagRank) {
+	subQueryTotalScore := db.
+		Model(&models.UserCompletedQuiz{}).
+		Select("quiz_id, MAX(score) as score").
+		Where("user_id = ?", userId).
+		Group("quiz_id")
+
+	db.
+		Model(&models.Tag{}).
+		Select(`
+		tags.id as tag_id, 
+		tags.description as tag_description, 
+		SUM(sq.score) as total_score`).
+		Joins("INNER JOIN quizzes q ON q.tag_id = tags.id").
+		Joins("INNER JOIN (?) AS sq ON sq.quiz_id = q.id", subQueryTotalScore).
+		Group("tags.id, tags.description").
+		Order("total_score DESC").
+		Scan(tagRank)
 }

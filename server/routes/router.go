@@ -24,6 +24,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 		user.POST("/", userController.CreateUser)
 		// Rotas protegidas
 		user.GET("/user_infos", middlewares.Auth(), userController.GetUserInfos)
+		user.GET("/kpi", middlewares.Auth(), userController.GetUserKpi)
 		user.PUT("/", middlewares.Auth(), userController.UpdateUser)
 		user.DELETE("/", middlewares.Auth(), userController.DeleteUser)
 	}

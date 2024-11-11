@@ -373,6 +373,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/kpi": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user kpi",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserKpiDto"
+                        }
+                    }
+                }
+            }
+        },
         "/user/user_infos": {
             "get": {
                 "security": [
@@ -402,15 +426,12 @@ const docTemplate = `{
         "dto.CreateUserDto": {
             "type": "object",
             "required": [
-                "name",
                 "password",
                 "username"
             ],
             "properties": {
                 "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 6
+                    "type": "string"
                 },
                 "password": {
                     "type": "string",
@@ -478,6 +499,20 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.QuizRank": {
+            "type": "object",
+            "properties": {
+                "quiz": {
+                    "$ref": "#/definitions/models.Quiz"
+                },
+                "quizId": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.QuizSession": {
             "type": "object",
             "properties": {
@@ -517,6 +552,20 @@ const docTemplate = `{
                 "Correct"
             ]
         },
+        "dto.TagRank": {
+            "type": "object",
+            "properties": {
+                "score": {
+                    "type": "integer"
+                },
+                "tag": {
+                    "$ref": "#/definitions/models.Tag"
+                },
+                "tagId": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.UpdateUserDto": {
             "type": "object",
             "properties": {
@@ -531,13 +580,30 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Quiz": {
+        "dto.UserKpiDto": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "integer"
                 },
-                "score": {
+                "quizzesRank": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.QuizRank"
+                    }
+                },
+                "tagsRank": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TagRank"
+                    }
+                }
+            }
+        },
+        "models.Quiz": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "integer"
                 },
                 "tag": {

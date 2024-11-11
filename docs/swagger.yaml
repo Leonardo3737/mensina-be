@@ -3,8 +3,6 @@ definitions:
   dto.CreateUserDto:
     properties:
       name:
-        maxLength: 50
-        minLength: 6
         type: string
       password:
         maxLength: 50
@@ -15,7 +13,6 @@ definitions:
         minLength: 3
         type: string
     required:
-    - name
     - password
     - username
     type: object
@@ -54,6 +51,15 @@ definitions:
       token:
         type: string
     type: object
+  dto.QuizRank:
+    properties:
+      quiz:
+        $ref: '#/definitions/models.Quiz'
+      quizId:
+        type: integer
+      score:
+        type: integer
+    type: object
   dto.QuizSession:
     properties:
       correct:
@@ -81,6 +87,15 @@ definitions:
     - Unanswered
     - InCorrect
     - Correct
+  dto.TagRank:
+    properties:
+      score:
+        type: integer
+      tag:
+        $ref: '#/definitions/models.Tag'
+      tagId:
+        type: integer
+    type: object
   dto.UpdateUserDto:
     properties:
       name:
@@ -90,11 +105,22 @@ definitions:
       username:
         type: string
     type: object
-  models.Quiz:
+  dto.UserKpiDto:
     properties:
       id:
         type: integer
-      score:
+      quizzesRank:
+        items:
+          $ref: '#/definitions/dto.QuizRank'
+        type: array
+      tagsRank:
+        items:
+          $ref: '#/definitions/dto.TagRank'
+        type: array
+    type: object
+  models.Quiz:
+    properties:
+      id:
         type: integer
       tag:
         $ref: '#/definitions/models.Tag'
@@ -371,6 +397,20 @@ paths:
       security:
       - BearerAuth: []
       summary: Update user by ID
+      tags:
+      - User
+  /user/kpi:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/dto.UserKpiDto'
+      security:
+      - BearerAuth: []
+      summary: Get user kpi
       tags:
       - User
   /user/user_infos:

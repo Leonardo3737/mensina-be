@@ -1,21 +1,22 @@
 package dto
 
-import "mensina-be/database/models"
-
 type QuizRank struct {
-	Quiz   models.Quiz `json:"quiz" gorm:"foreignKey:QuizId"`
-	QuizId uint        `json:"quizId"`
-	Score  int         `json:"score"`
+	QuizTitle      string `json:"quizTitle"`
+	QuizId         uint   `json:"quizId"`
+	TagDescription string `json:"tagDescription"`
+	TagId          uint   `json:"tagId"`
+	Score          int    `json:"score"`
 }
 
 type TagRank struct {
-	Tag   models.Tag `json:"tag" gorm:"foreignKey:TagId"`
-	TagId uint        `json:"tagId"`
-	Score  int         `json:"score"`
+	TagDescription string `json:"tagDescription"`
+	TagId          uint   `json:"tagId"`
+	TotalScore     int    `json:"totalscore"`
 }
 
 type UserKpiDto struct {
-	UserId      uint          `json:"id"`
+	UserId      uint       `json:"userId"`
+	TotalScore  int        `json:"totaScore"`
 	QuizzesRank []QuizRank `json:"quizzesRank"`
 	TagsRank    []TagRank  `json:"tagsRank"`
 }
