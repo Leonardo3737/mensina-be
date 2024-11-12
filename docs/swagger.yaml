@@ -491,6 +491,26 @@ paths:
       summary: Upload de ícone de usuário
       tags:
       - User
+  /user/icon/{user_id}:
+    get:
+      parameters:
+      - description: USER ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: Ícone do usuário em PNG
+          schema:
+            type: file
+      security:
+      - BearerAuth: []
+      summary: Obter ícone de usuário
+      tags:
+      - User
   /user/kpi:
     get:
       produces:

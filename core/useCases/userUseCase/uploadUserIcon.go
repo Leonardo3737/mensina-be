@@ -7,13 +7,12 @@ import (
 	"mensina-be/database/models"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/olahol/go-imageupload"
 )
 
 func UploadUserIcon(userId uint, icon *imageupload.Image) *config.RestErr {
-	fileName := fmt.Sprintf("user_%d_%d.png", userId, time.Now().Unix())
+	fileName := fmt.Sprintf("usericon_%d.png", userId)
 	uploadDir := filepath.Join("uploads", "user_icons")
 	filePath := filepath.Join(uploadDir, fileName)
 

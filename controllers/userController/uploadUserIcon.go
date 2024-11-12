@@ -40,13 +40,5 @@ func UploadUserIcon(c *gin.Context) {
 		return
 	}
 
-	userIconPng, err := imageupload.ThumbnailPNG(userIcon, 300, 300)
-
-	if err != nil {
-		restErr := config.NewInternaErr(err.Error())
-		c.JSON(restErr.Code, restErr)
-		return
-	}
-
-	userIconPng.Write(c.Writer)
+	c.Status(201)
 }
