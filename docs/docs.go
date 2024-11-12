@@ -81,6 +81,42 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Create quiz",
+                "parameters": [
+                    {
+                        "description": "Quiz data",
+                        "name": "quiz",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateQuizDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Quiz",
+                        "schema": {
+                            "$ref": "#/definitions/models.Quiz"
+                        }
+                    }
+                }
             }
         },
         "/quiz/answer_check": {
@@ -256,6 +292,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "produces": [
@@ -268,6 +307,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/models.Tag"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Create tag",
+                "parameters": [
+                    {
+                        "description": "Tag data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTagDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Tag",
                         "schema": {
                             "$ref": "#/definitions/models.Tag"
                         }
@@ -459,6 +534,32 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CreateQuizDto": {
+            "type": "object",
+            "required": [
+                "tagId",
+                "title"
+            ],
+            "properties": {
+                "tagId": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateTagDto": {
+            "type": "object",
+            "required": [
+                "description"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.CreateUserDto": {
             "type": "object",
             "required": [
@@ -705,6 +806,9 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "iconPath": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },

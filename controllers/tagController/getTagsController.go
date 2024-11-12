@@ -10,6 +10,7 @@ import (
 // @Summary Get all tags
 // @Tags Tag
 // @Produce json
+// @Security BearerAuth
 // @Success 200 {object} models.Tag "Success"
 // @Security BearerAuth
 // @Router /tag [get]

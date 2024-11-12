@@ -34,6 +34,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 	quiz := router.Group("quiz", middlewares.Auth())
 	{
 		quiz.GET("/", quizController.GetQuiz)
+		quiz.POST("/", quizController.CreateQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
 		quiz.GET("/answer_check", func(c *gin.Context) { quizController.AnswerCheck(c, quizRoutineChannel) })
 		quiz.GET("/start/:quiz_id", func(c *gin.Context) { quizController.StartQuiz(c, quizRoutineChannel) })
@@ -44,6 +45,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 	tag := router.Group("tag", middlewares.Auth())
 	{
 		tag.GET("/", tagController.GetTags)
+		tag.POST("/", tagController.CreateTag)
 	}
 
 	// RANK routes

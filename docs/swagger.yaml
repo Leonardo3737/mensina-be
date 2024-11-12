@@ -1,5 +1,22 @@
 basePath: /
 definitions:
+  dto.CreateQuizDto:
+    properties:
+      tagId:
+        type: integer
+      title:
+        type: string
+    required:
+    - tagId
+    - title
+    type: object
+  dto.CreateTagDto:
+    properties:
+      description:
+        type: string
+    required:
+    - description
+    type: object
   dto.CreateUserDto:
     properties:
       name:
@@ -160,6 +177,8 @@ definitions:
   models.User:
     description: User object
     properties:
+      iconPath:
+        type: string
       id:
         type: integer
       name:
@@ -227,6 +246,28 @@ paths:
       security:
       - BearerAuth: []
       summary: Get all quizzes
+      tags:
+      - Quiz
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Quiz data
+        in: body
+        name: quiz
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateQuizDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Quiz
+          schema:
+            $ref: '#/definitions/models.Quiz'
+      security:
+      - BearerAuth: []
+      summary: Create quiz
       tags:
       - Quiz
   /quiz/answer_check:
@@ -342,7 +383,30 @@ paths:
             $ref: '#/definitions/models.Tag'
       security:
       - BearerAuth: []
+      - BearerAuth: []
       summary: Get all tags
+      tags:
+      - Tag
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTagDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Tag
+          schema:
+            $ref: '#/definitions/models.Tag'
+      security:
+      - BearerAuth: []
+      summary: Create tag
       tags:
       - Tag
   /user:
