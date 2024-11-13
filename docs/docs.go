@@ -68,6 +68,12 @@ const docTemplate = `{
                         "description": "Tag ID",
                         "name": "tag_id",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "em progresso",
+                        "name": "in_progress",
+                        "in": "query"
                     }
                 ],
                 "responses": {

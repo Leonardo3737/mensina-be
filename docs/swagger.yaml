@@ -234,6 +234,10 @@ paths:
         in: query
         name: tag_id
         type: string
+      - description: em progresso
+        in: query
+        name: in_progress
+        type: boolean
       produces:
       - application/json
       responses:

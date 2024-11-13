@@ -37,7 +37,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 	// QUIZ routes
 	quiz := router.Group("quiz", middlewares.Auth())
 	{
-		quiz.GET("/", quizController.GetQuiz)
+		quiz.GET("/", func(c *gin.Context) { quizController.GetQuiz(c, quizRoutineChannel) })
 		quiz.POST("/", quizController.CreateQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
 		quiz.GET("/answer_check", func(c *gin.Context) { quizController.AnswerCheck(c, quizRoutineChannel) })
