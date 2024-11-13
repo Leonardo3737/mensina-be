@@ -26,11 +26,7 @@ func GetUserIconById(c *gin.Context) {
 	}
 
 	// Busca o ícone do usuário
-	iconFile, restErr := userUseCase.GetUserIconById(uint(userId))
-	if restErr != nil {
-		c.JSON(restErr.Code, restErr)
-		return
-	}
+	iconFile := userUseCase.GetUserIconById(uint(userId))
 
 	// Define o cabeçalho de tipo de conteúdo para imagem PNG
 	c.Writer.Header().Set("Content-Type", "image/png")
