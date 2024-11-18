@@ -3,7 +3,7 @@ package dto
 type CreateUserDto struct {
 	UserName string `json:"username" binding:"required,min=3,max=50"`
 	Password string `json:"password" binding:"required,min=6,max=50"`
-	Name     string `json:"name" 		 binding:"required,min=6,max=50"`
+	Name     string `json:"name" binding:"required,min=2,max=50"`
 }
 
 type UpdateUserDto struct {
