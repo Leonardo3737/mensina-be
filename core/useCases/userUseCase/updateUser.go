@@ -16,6 +16,18 @@ import (
 func UpdateUser(user *dto.UpdateUserDto, id uint) *config.RestErr {
 	db := database.GetDatabase()
 
+	if user.Password != "" && len(user.Password) < 6 {
+		return config.NewBadRequestErr("password must be longer than 6 characters")
+	}
+
+	if user.Name != "" && len(user.Name) < 2 {
+		return config.NewBadRequestErr("name must be longer than 2 characters")
+	}
+
+	if user.UserName != "" && len(user.UserName) < 3 {
+		return config.NewBadRequestErr("username must be longer than 3 characters")
+	}
+
 	var existingUser models.User
 	err := db.Where("user_name = ?", user.UserName).First(&existingUser).Error
 
@@ -41,10 +53,6 @@ func UpdateUser(user *dto.UpdateUserDto, id uint) *config.RestErr {
 
 	if res.Error != nil {
 		return config.NewInternaErr("cannot update user")
-	}
-
-	if res.RowsAffected == 0 {
-		return config.NewNotFoundErr(fmt.Sprintf("cannot find user. id: %d", id))
 	}
 
 	return nil
