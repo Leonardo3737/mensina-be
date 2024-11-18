@@ -14,43 +14,47 @@ func GetQuizzes(tagId string, inProgress bool, quizRoutineChannel chan routines.
 	var wg sync.WaitGroup
 
 	var quizzes []models.Quiz
-	var quizzesIdInProgres []uint
+	var quizzesIdInProgress []uint
 
+	// Coletar IDs de quizzes em progresso
 	wg.Add(1)
 	quizRoutineChannel <- func(qs routines.QuizSessions) *sync.WaitGroup {
-		for sessiokey, _ := range qs {
-			quizId, err := services.ExtractQuizId(sessiokey)
+		for sessionKey := range qs {
+			quizId, err := services.ExtractQuizId(sessionKey)
 			if err != nil {
 				log.Fatal(err)
 			}
-			quizzesIdInProgres = append(quizzesIdInProgres, quizId)
+			quizzesIdInProgress = append(quizzesIdInProgress, quizId)
 		}
 		return &wg
 	}
 	wg.Wait()
 
+	// Inicializar consulta
 	query := db.Preload("Tag")
 
+	// Filtrar por tagId
 	if tagId != "" {
 		query = query.Where("tag_id = ?", tagId)
 	}
 
+	// Filtrar por quizzes em progresso
 	if inProgress {
-		if len(quizzesIdInProgres) > 0 {
-			query = query.Where("id = ?", quizzesIdInProgres[0])
-
-			for _, quizId := range quizzesIdInProgres[1:] {
-				query = query.Or("id = ?", quizId)
-			}
+		if len(quizzesIdInProgress) > 0 {
+			// Agrupar condição OR
+			query = query.Where("id IN (?)", quizzesIdInProgress)
 		} else {
+			// Nenhum quiz em progresso
 			query = query.Where("false")
 		}
 	} else {
-		for _, quizId := range quizzesIdInProgres {
-			query = query.Where("id != ?", quizId)
+		// Excluir quizzes em progresso
+		if len(quizzesIdInProgress) > 0 {
+			query = query.Where("id NOT IN (?)", quizzesIdInProgress)
 		}
 	}
 
+	// Executar consulta
 	err := query.Find(&quizzes).Error
 
 	return quizzes, err
