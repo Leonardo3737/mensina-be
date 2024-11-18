@@ -32,7 +32,7 @@ func GetQuizzes(tagId string, inProgress bool, quizRoutineChannel chan routines.
 	query := db.Preload("Tag")
 
 	if tagId != "" {
-		query = db.Where("tag_id = ?", tagId)
+		query = query.Where("tag_id = ?", tagId)
 	}
 
 	if inProgress {
