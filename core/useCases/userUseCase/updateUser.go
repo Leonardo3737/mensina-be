@@ -22,7 +22,7 @@ func UpdateUser(user *dto.UpdateUserDto, id uint) *config.RestErr {
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		// Erro inesperado (por exemplo, conexão com o banco)
 		return config.NewInternaErr("cannot checking username")
-	} else if err == nil {
+	} else if err == nil && existingUser.ID != id {
 		// Usuário já existe
 		return config.NewConflictErr("username already exists")
 	}
