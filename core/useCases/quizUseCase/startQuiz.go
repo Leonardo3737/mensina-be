@@ -44,6 +44,7 @@ func StartQuiz(userId, quizId uint, quizRoutineChannel chan routines.RoutineCall
 				Score:     0,
 				UserId:    userId,
 				QuizzId:   quizId,
+				QuizTitle: quiz.Title,
 				Questions: make(map[int]dto.Status),
 			}
 			sessions[sessionKey] = quizSession

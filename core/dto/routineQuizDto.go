@@ -25,5 +25,6 @@ type QuizSession struct {
 	Correct   int            `json:"correct"`
 	UserId    uint           `json:"userId"`
 	QuizzId   uint           `json:"quizzId"`
+	QuizTitle string         `json:"quizTitle"`
 	Questions map[int]Status `json:"questions"`
 }
