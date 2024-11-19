@@ -49,19 +49,19 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 
 		if !isCorrect {
 			quizSession.Questions[questionId] = dto.InCorrect
-			return &wg
+		} else {
+			quizSession.Questions[questionId] = dto.Correct
+			scoreToAdd := 2
+			quizSession.Correct++
+
+			if quizSession.Total > 3 && quizSession.Total == quizSession.Correct {
+				scoreToAdd = 3
+			}
+
+			quizSession.Score += scoreToAdd
 		}
-		quizSession.Questions[questionId] = dto.Correct
 
-		scoreToAdd := 2
-		quizSession.Correct++
-
-		if quizSession.Total > 3 && quizSession.Total == quizSession.Correct {
-			scoreToAdd = 3
-		}
-
-		quizSession.Score += scoreToAdd
-
+		fmt.Println(quizSession.Total)
 		if quizSession.Total == 5 {
 			go FinishQuiz(quizSession.QuizzId, quizSession.UserId, quizRoutineChannel)
 		}
