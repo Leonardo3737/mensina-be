@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-func GetQuizzes(tagId string, inProgress bool, quizRoutineChannel chan routines.RoutineCallback) ([]models.Quiz, error) {
+func GetQuizzes(tagId string, inProgress bool, userId uint,quizRoutineChannel chan routines.RoutineCallback) ([]models.Quiz, error) {
 	db := database.GetDatabase()
 	var wg sync.WaitGroup
 
@@ -20,11 +20,13 @@ func GetQuizzes(tagId string, inProgress bool, quizRoutineChannel chan routines.
 	wg.Add(1)
 	quizRoutineChannel <- func(qs routines.QuizSessions) *sync.WaitGroup {
 		for sessionKey := range qs {
-			quizId, err := services.ExtractQuizId(sessionKey)
+			quizId, _userId, err := services.ExtractQuizId(sessionKey)
 			if err != nil {
 				log.Fatal(err)
 			}
-			quizzesIdInProgress = append(quizzesIdInProgress, quizId)
+			if _userId == userId {
+				quizzesIdInProgress = append(quizzesIdInProgress, quizId)
+			}
 		}
 		return &wg
 	}

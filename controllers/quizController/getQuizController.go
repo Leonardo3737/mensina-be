@@ -4,6 +4,7 @@ import (
 	"mensina-be/config"
 	"mensina-be/core/routines"
 	"mensina-be/core/useCases/quizUseCase"
+	"mensina-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,15 @@ func GetQuiz(c *gin.Context, quizRoutineChannel chan routines.RoutineCallback) {
 	tagId := c.Query("tag_id")
 	inProgress := c.Query("in_progress") == "true"
 
-	quizzes, err := quizUseCase.GetQuizzes(tagId, inProgress, quizRoutineChannel)
+	userId, err := utils.GetUserIdByToken(c)
+
+	if err != nil {
+		restErr := config.NewUnauthorizedErr(err.Error())
+		c.JSON(restErr.Code, restErr)
+		return
+	}
+
+	quizzes, err := quizUseCase.GetQuizzes(tagId, inProgress, userId,quizRoutineChannel)
 
 	if err != nil {
 		restErr := config.NewInternaErr("cannot list quizzes")
