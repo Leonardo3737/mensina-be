@@ -186,6 +186,33 @@
                 }
             }
         },
+        "/quiz/history": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Get quizzes history",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.UserCompletedQuiz"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/quiz/questions/{quiz_id}": {
             "get": {
                 "security": [
@@ -596,12 +623,15 @@
         "dto.CreateUserDto": {
             "type": "object",
             "required": [
+                "name",
                 "password",
                 "username"
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
                 },
                 "password": {
                     "type": "string",
@@ -700,6 +730,9 @@
                     "additionalProperties": {
                         "$ref": "#/definitions/dto.Status"
                     }
+                },
+                "quizTitle": {
+                    "type": "string"
                 },
                 "quizzId": {
                     "type": "integer"
@@ -855,6 +888,32 @@
                 "username": {
                     "type": "string",
                     "minLength": 3
+                }
+            }
+        },
+        "models.UserCompletedQuiz": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "quiz": {
+                    "$ref": "#/definitions/models.Quiz"
+                },
+                "quizId": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "userId": {
+                    "type": "integer"
                 }
             }
         },

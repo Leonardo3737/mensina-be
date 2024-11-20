@@ -20,6 +20,8 @@ definitions:
   dto.CreateUserDto:
     properties:
       name:
+        maxLength: 50
+        minLength: 2
         type: string
       password:
         maxLength: 50
@@ -30,6 +32,7 @@ definitions:
         minLength: 3
         type: string
     required:
+    - name
     - password
     - username
     type: object
@@ -89,6 +92,8 @@ definitions:
         additionalProperties:
           $ref: '#/definitions/dto.Status'
         type: object
+      quizTitle:
+        type: string
       quizzId:
         type: integer
       score:
@@ -193,6 +198,23 @@ definitions:
     - name
     - password
     - username
+    type: object
+  models.UserCompletedQuiz:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      quiz:
+        $ref: '#/definitions/models.Quiz'
+      quizId:
+        type: integer
+      score:
+        type: integer
+      user:
+        $ref: '#/definitions/models.User'
+      userId:
+        type: integer
     type: object
   quizController.answerCheckResponse:
     properties:
@@ -313,6 +335,22 @@ paths:
       security:
       - BearerAuth: []
       summary: Finish quiz
+      tags:
+      - Quiz
+  /quiz/history:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/models.UserCompletedQuiz'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get quizzes history
       tags:
       - Quiz
   /quiz/questions/{quiz_id}:

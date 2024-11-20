@@ -40,6 +40,7 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 		quiz.GET("/", func(c *gin.Context) { quizController.GetQuiz(c, quizRoutineChannel) })
 		quiz.POST("/", quizController.CreateQuiz)
 		quiz.GET("/questions/:quiz_id", quizController.GetQuestionByQuiz)
+		quiz.GET("/history", quizController.GetHistory)
 		quiz.GET("/answer_check", func(c *gin.Context) { quizController.AnswerCheck(c, quizRoutineChannel) })
 		quiz.GET("/start/:quiz_id", func(c *gin.Context) { quizController.StartQuiz(c, quizRoutineChannel) })
 		quiz.DELETE("/finish/:quiz_id", func(c *gin.Context) { quizController.FinishQuiz(c, quizRoutineChannel) })
