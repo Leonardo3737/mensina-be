@@ -400,6 +400,14 @@ paths:
         in: query
         name: update_rank
         type: boolean
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Per page
+        in: query
+        name: perPage
+        type: integer
       produces:
       - application/json
       responses:

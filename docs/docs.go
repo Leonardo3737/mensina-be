@@ -305,6 +305,18 @@ const docTemplate = `{
                         "description": "Update Rank",
                         "name": "update_rank",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Per page",
+                        "name": "perPage",
+                        "in": "query"
                     }
                 ],
                 "responses": {
