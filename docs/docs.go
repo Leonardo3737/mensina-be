@@ -186,8 +186,11 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Success"
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuizSession"
+                        }
                     }
                 }
             }
@@ -810,6 +813,9 @@ const docTemplate = `{
         "dto.UserKpiDto": {
             "type": "object",
             "properties": {
+                "correctAnswersAvarage": {
+                    "type": "number"
+                },
                 "quizzesRank": {
                     "type": "array",
                     "items": {
@@ -890,9 +896,6 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
-                "iconPath": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -912,6 +915,9 @@ const docTemplate = `{
         "models.UserCompletedQuiz": {
             "type": "object",
             "properties": {
+                "correctAnswers": {
+                    "type": "integer"
+                },
                 "createdAt": {
                     "type": "string"
                 },

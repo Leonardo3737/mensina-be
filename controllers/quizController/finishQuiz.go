@@ -12,7 +12,7 @@ import (
 
 // @Summary Finish quiz
 // @Tags Quiz
-// @Success 204 "Success"
+// @Success 200 {object} dto.QuizSession "Success"
 // @Param quiz_id path string true "Quiz ID"
 // @Security BearerAuth
 // @Router /quiz/finish/{quiz_id} [delete]
@@ -32,6 +32,6 @@ func FinishQuiz(c *gin.Context, ch chan routines.RoutineCallback) {
 		c.JSON(restErr.Code, restErr)
 		return
 	}
-	quizUseCase.FinishQuiz(uint(quizId), userId, ch)
-	c.Status(204)
+	quizSession := quizUseCase.FinishQuiz(uint(quizId), userId, ch)
+	c.JSON(200, quizSession)
 }

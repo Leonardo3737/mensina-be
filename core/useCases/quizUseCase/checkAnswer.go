@@ -51,22 +51,33 @@ func AnswerCheck(answerId, questionId, userId int, quizRoutineChannel chan routi
 			quizSession.Questions[questionId] = dto.InCorrect
 		} else {
 			quizSession.Questions[questionId] = dto.Correct
-			scoreToAdd := 2
+			scoreToAdd := 10
 			quizSession.Correct++
 
 			if quizSession.Total > 3 && quizSession.Total == quizSession.Correct {
-				scoreToAdd = 3
+				scoreToAdd += quizSession.Total
 			}
 
 			quizSession.Score += scoreToAdd
 		}
 
-		fmt.Println(quizSession.Total)
 		if quizSession.Total == 5 {
-			go FinishQuiz(quizSession.QuizzId, quizSession.UserId, quizRoutineChannel)
+			ApplyFinalBonus(quizSession)
 		}
 		return &wg
 	}
 	wg.Wait()
 	return isCorrect, err
+}
+
+func ApplyFinalBonus(quizSession *dto.QuizSession) {
+	accuracy := float64(quizSession.Correct) / float64(quizSession.Total)
+
+	if accuracy == 1.0 {
+		// 100% de acertos
+		quizSession.Score = int(float64(quizSession.Score) * 1.2) // +20%
+	} else if accuracy >= 0.8 {
+		// 80% ou mais de acertos
+		quizSession.Score = int(float64(quizSession.Score) * 1.1) // +10%
+	}
 }

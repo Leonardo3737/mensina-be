@@ -18,6 +18,6 @@ type UserKpiDto struct {
 	CorrectAnswersAvarage float64    `json:"correctAnswersAvarage"`
 	UserId                uint       `json:"userId"`
 	TotalScore            int        `json:"totaScore"`
-	QuizzesRank           []QuizRank `json:"quizzesRank"`
-	TagsRank              []TagRank  `json:"tagsRank"`
+	QuizzesRank           []QuizRank `json:"quizzesRank"  gorm:"-"`
+	TagsRank              []TagRank  `json:"tagsRank"  gorm:"-"`
 }
