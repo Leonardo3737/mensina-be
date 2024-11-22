@@ -3,8 +3,6 @@ package userUseCase
 import (
 	"fmt"
 	"mensina-be/config"
-	"mensina-be/database"
-	"mensina-be/database/models"
 	"os"
 	"path/filepath"
 
@@ -28,12 +26,5 @@ func UploadUserIcon(userId uint, icon *imageupload.Image) *config.RestErr {
 		return config.NewInternaErr("Erro ao salvar a imagem")
 	}
 
-	// Atualizar o caminho do ícone no banco de dados
-	db := database.GetDatabase()
-	err = db.Model(&models.User{}).Where("id = ?", userId).Update("icon_path", filePath).Error
-
-	if err != nil {
-		return config.NewInternaErr("Erro ao atualizar o caminho da imagem no banco de dados")
-	}
 	return nil
 }

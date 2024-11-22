@@ -15,8 +15,9 @@ type TagRank struct {
 }
 
 type UserKpiDto struct {
-	UserId      uint       `json:"userId"`
-	TotalScore  int        `json:"totaScore"`
-	QuizzesRank []QuizRank `json:"quizzesRank"`
-	TagsRank    []TagRank  `json:"tagsRank"`
+	CorrectAnswersAvarage float64    `json:"correctAnswersAvarage"`
+	UserId                uint       `json:"userId"`
+	TotalScore            int        `json:"totaScore"`
+	QuizzesRank           []QuizRank `json:"quizzesRank"`
+	TagsRank              []TagRank  `json:"tagsRank"`
 }

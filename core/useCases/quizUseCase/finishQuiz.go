@@ -24,9 +24,10 @@ func FinishQuiz(quizId, userId uint, quizRoutineChannel chan routines.RoutineCal
 		if quizSession.Total == 5 {
 			db := database.GetDatabase()
 			userCompletedQuiz := models.UserCompletedQuiz{
-				Score:  quizSession.Score,
-				UserId: userId,
-				QuizId: quizId,
+				CorrectAnswers: quizSession.Correct,
+				Score:          quizSession.Score,
+				UserId:         userId,
+				QuizId:         quizId,
 			}
 			err := db.Create(&userCompletedQuiz).Error
 			if err != nil {

@@ -2,9 +2,11 @@ package quizUseCase
 
 import (
 	"fmt"
+	"math/rand"
 	"mensina-be/core/dto"
 	"mensina-be/database"
 	"mensina-be/database/models"
+	"time"
 )
 
 func GetQuestionByQuiz(id int) ([]dto.OutputQuestionDto, error) {
@@ -19,6 +21,8 @@ func GetQuestionByQuiz(id int) ([]dto.OutputQuestionDto, error) {
 
 	questionsDto := make([]dto.OutputQuestionDto, 0, len(questions))
 
+	rand.Seed(time.Now().UnixNano())
+
 	for _, question := range questions {
 		answersDto := make([]dto.OutputAnswerDto, 0, len(question.Answers))
 
@@ -29,13 +33,23 @@ func GetQuestionByQuiz(id int) ([]dto.OutputQuestionDto, error) {
 			})
 		}
 
-		questionsDto = append(questionsDto, dto.OutputQuestionDto{
-			ID:          question.ID,
-			Title:       question.Title,
-			Description: question.Description,
-			Answers:     answersDto,
+		// Embaralha as respostas
+		rand.Shuffle(len(answersDto), func(i, j int) {
+			answersDto[i], answersDto[j] = answersDto[j], answersDto[i]
 		})
+
+		questionsDto = append(questionsDto, dto.OutputQuestionDto{
+			ID:      question.ID,
+			Title:   question.Title,
+			Answers: answersDto,
+		})
+
 	}
+
+	// Embaralha as perguntas
+	rand.Shuffle(len(questionsDto), func(i, j int) {
+		questionsDto[i], questionsDto[j] = questionsDto[j], questionsDto[i]
+	})
 
 	return questionsDto, err
 }

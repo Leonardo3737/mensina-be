@@ -13,34 +13,31 @@ import (
 func GetUserKpi(userId uint) (dto.UserKpiDto, *config.RestErr) {
 	db := database.GetDatabase()
 	var wg sync.WaitGroup
-	var tagsRank []dto.TagRank
-	var quizzesRank []dto.QuizRank
+	var userKpi dto.UserKpiDto
 
-	wg.Add(2)
+	wg.Add(3)
 
 	go func() {
-		getQuizRank(userId, db, &quizzesRank)
-		wg.Done()
+		defer wg.Done()
+
+		getQuizRank(userId, db, &userKpi.QuizzesRank)
 	}()
 	go func() {
-		getTagRank(userId, db, &tagsRank)
-		wg.Done()
+		defer wg.Done()
+
+		getAvarage(userId, db, &userKpi)
+	}()
+	go func() {
+		defer wg.Done()
+
+		getTagRank(userId, db, &userKpi.TagsRank)
+
+		for _, tagRank := range userKpi.TagsRank {
+			userKpi.TotalScore += tagRank.TotalScore
+		}
 	}()
 
 	wg.Wait()
-
-	totalScore := 0
-
-	for _, tagRank := range tagsRank {
-		totalScore += tagRank.TotalScore
-	}
-
-	userKpi := dto.UserKpiDto{
-		UserId:      userId,
-		QuizzesRank: quizzesRank,
-		TagsRank:    tagsRank,
-		TotalScore:  totalScore,
-	}
 
 	return userKpi, nil
 }
@@ -80,4 +77,16 @@ func getTagRank(userId uint, db *gorm.DB, tagRank *[]dto.TagRank) {
 		Group("tags.id, tags.description").
 		Order("total_score DESC").
 		Scan(tagRank)
+}
+
+func getAvarage(userId uint, db *gorm.DB, userKpi *dto.UserKpiDto) {
+	db.
+		Model(models.UserCompletedQuiz{}).
+		Select(`
+		user_id,
+		SUM(correct_answers)/(COUNT(*)*5) AS correct_answers_avarage
+		`).
+		Where("user_id = ?", userId).
+		Group("user_id").
+		Scan(userKpi)
 }
