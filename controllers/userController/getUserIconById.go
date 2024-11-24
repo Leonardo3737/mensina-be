@@ -28,6 +28,11 @@ func GetUserIconById(c *gin.Context) {
 	// Busca o ícone do usuário
 	iconFile := userUseCase.GetUserIconById(uint(userId))
 
+	if iconFile == nil {
+		c.Status(204)
+		return
+	}
+
 	// Define o cabeçalho de tipo de conteúdo para imagem PNG
 	c.Writer.Header().Set("Content-Type", "image/png")
 	c.Writer.WriteHeader(200)
