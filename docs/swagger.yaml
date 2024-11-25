@@ -191,6 +191,8 @@ definitions:
       password:
         minLength: 6
         type: string
+      safeUrlIcon:
+        type: string
       username:
         minLength: 3
         type: string
@@ -543,26 +545,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Upload de ícone de usuário
-      tags:
-      - User
-  /user/icon/{user_id}:
-    get:
-      parameters:
-      - description: USER ID
-        in: path
-        name: user_id
-        required: true
-        type: integer
-      produces:
-      - image/png
-      responses:
-        "200":
-          description: Ícone do usuário em PNG
-          schema:
-            type: file
-      security:
-      - BearerAuth: []
-      summary: Obter ícone de usuário
       tags:
       - User
   /user/kpi:

@@ -24,7 +24,7 @@ func GetRank(updateRank bool, page, perPage int) ([]models.Rank, *config.RestErr
 
 	err := db.
 		Preload("User", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id", "name", "user_name")
+			return db.Select("id", "name", "user_name", "safe_url_icon")
 		}).
 		Preload("BestScoreQuiz.Tag").
 		Order("total_score DESC").

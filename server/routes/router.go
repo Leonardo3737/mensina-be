@@ -31,7 +31,6 @@ func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCa
 		user.PUT("/", middlewares.Auth(), userController.UpdateUser)
 		user.DELETE("/", middlewares.Auth(), userController.DeleteUser)
 		user.POST("/icon", middlewares.Auth(), userController.UploadUserIcon)
-		user.GET("/icon/:user_id", middlewares.Auth(), userController.GetUserIconById)
 	}
 
 	// QUIZ routes
