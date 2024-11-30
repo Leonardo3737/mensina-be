@@ -8,6 +8,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var db *gorm.DB
@@ -20,6 +21,17 @@ func StartDb() {
 	if err != nil {
 		log.Fatal("error: ", err)
 	}
+
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			LogLevel:      logger.Warn,
+			Colorful:      true,
+		},
+	)
+
+	database.Logger = newLogger
 
 	db = database
 
