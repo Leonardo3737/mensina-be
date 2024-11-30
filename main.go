@@ -5,9 +5,20 @@ import (
 	"mensina-be/core/routines"
 	"mensina-be/database"
 	"mensina-be/server"
+	"os"
 
 	"github.com/joho/godotenv"
 )
+
+func init() {
+	// Carrega o .env somente em desenvolvimento
+	if os.Getenv("DB_CONNECTION") == "" { // Use uma variável específica para identificar o ambiente
+			err := godotenv.Load()
+			if err != nil {
+					log.Println("No .env file found, using Render environment variables")
+			}
+	}
+}
 
 // @title API Mensina
 // @version 1.0
@@ -20,11 +31,6 @@ import (
 // @name Authorization
 // @description Insira o token de autenticação no formato: "Bearer {token}"
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	database.StartDb()
 	server := server.NewServer()
 
