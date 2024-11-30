@@ -1,6 +1,20 @@
-FROM mysql:8.4.3
+# Use uma imagem oficial do Go
+FROM golang:1.23-alpine3.19
 
-ENV MYSQL_ROOT_PASSWORD=mypassword
-ENV MYSQL_DATABASE=mensina
+# Defina o diretório de trabalho dentro do container
+WORKDIR /app
 
-EXPOSE 3306
+# Copie todos os arquivos do projeto para o container
+COPY . .
+
+# Baixe as dependências
+RUN go mod download
+
+# Compile a aplicação
+RUN go build -o main .
+
+# Exponha a porta em que o servidor vai rodar
+EXPOSE 8080
+
+# Comando para rodar a aplicação
+CMD ["./main"]
