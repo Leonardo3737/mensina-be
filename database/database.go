@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -16,7 +16,7 @@ var db *gorm.DB
 func StartDb() {
 	str := os.Getenv("DB_CONNECTION")
 
-	database, err := gorm.Open(mysql.Open(str), &gorm.Config{})
+	database, err := gorm.Open(postgres.Open(str), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("error: ", err)
