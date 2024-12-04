@@ -15,7 +15,7 @@ import (
 // @Param user body dto.CreateUserDto true "User data"
 // @Success 201 {object} models.User "User"
 // @Router /user [post]
-func CreateUser(c *gin.Context) {
+func (controller userController) CreateUser(c *gin.Context) {
 	var _user dto.CreateUserDto
 
 	if err := c.ShouldBindJSON(&_user); err != nil {

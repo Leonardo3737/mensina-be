@@ -15,7 +15,7 @@ import (
 // @Security BearerAuth
 // @Success 200 {object} dto.UserKpiDto "Success"
 // @Router /user/kpi [get]
-func GetUserKpi(c *gin.Context) {
+func (controller userController) GetUserKpi(c *gin.Context) {
 	userId, err := utils.GetUserIdByToken(c)
 
 	if err != nil {

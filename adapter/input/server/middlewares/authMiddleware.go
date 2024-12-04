@@ -30,7 +30,7 @@ func Auth() gin.HandlerFunc {
 	}
 }
 
-func AuthById() gin.HandlerFunc {
+func AuthWithId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		const BearerSchemma string = "Bearer "
 		header := c.GetHeader("Authorization")

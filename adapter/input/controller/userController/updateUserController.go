@@ -15,7 +15,7 @@ import (
 // @Security BearerAuth
 // @Success 204 "Success"
 // @Router /user/ [put]
-func UpdateUser(c *gin.Context) {
+func (controller userController) UpdateUser(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {

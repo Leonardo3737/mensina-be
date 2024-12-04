@@ -13,7 +13,7 @@ import (
 
 var db *gorm.DB
 
-func StartDb() {
+func StartDb() *gorm.DB {
 	str := os.Getenv("DB_CONNECTION")
 
 	database, err := gorm.Open(postgres.Open(str), &gorm.Config{})
@@ -42,6 +42,8 @@ func StartDb() {
 	config.SetConnMaxLifetime(time.Hour)
 
 	migrations.RunMigrations(db)
+
+	return db
 }
 
 func GetDatabase() *gorm.DB {

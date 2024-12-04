@@ -1,18 +1,22 @@
 package routes
 
 import (
-	"mensina-be/controllers/loginController"
-	"mensina-be/controllers/quizController"
-	"mensina-be/controllers/rankController"
-	"mensina-be/controllers/tagController"
-	"mensina-be/controllers/userController"
+	"mensina-be/adapter/input/controller/loginController"
+	"mensina-be/adapter/input/controller/quizController"
+	"mensina-be/adapter/input/controller/rankController"
+	"mensina-be/adapter/input/controller/tagController"
+	"mensina-be/adapter/input/controller/userController"
+	"mensina-be/adapter/input/server/middlewares"
 	"mensina-be/core/routines"
-	"mensina-be/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigRoutes(router *gin.Engine, quizRoutineChannel chan routines.RoutineCallback) *gin.Engine {
+func ConfigRoutes(
+	router *gin.Engine,
+	quizRoutineChannel chan routines.RoutineCallback,
+	userController userController.IUserController,
+) *gin.Engine {
 
 	// AUTH routes
 	router.POST("login", loginController.Login)

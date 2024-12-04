@@ -14,7 +14,7 @@ import (
 // @Success 200 {object} models.User "Success"
 // @Security BearerAuth
 // @Router /user/user_infos [get]
-func GetUserInfos(c *gin.Context) {
+func (controller userController) GetUserInfos(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {

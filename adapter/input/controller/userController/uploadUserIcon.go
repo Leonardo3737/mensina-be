@@ -17,7 +17,7 @@ import (
 // @Param file formData file true "Imagem do ícone do usuário (PNG, JPEG, etc.)"
 // @Success 200 {string} string "Imagem processada com sucesso"
 // @Router /user/icon [post]
-func UploadUserIcon(c *gin.Context) {
+func (controller userController) UploadUserIcon(c *gin.Context) {
 	userId, err := utils.GetUserIdByToken(c)
 	if err != nil {
 		restErr := config.NewBadRequestErr(err.Error())

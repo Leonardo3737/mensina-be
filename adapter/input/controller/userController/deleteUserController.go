@@ -13,7 +13,7 @@ import (
 // @Success 204 "No Content"
 // @Security BearerAuth
 // @Router /user/ [delete]
-func DeleteUser(c *gin.Context) {
+func (controller userController) DeleteUser(c *gin.Context) {
 	id, err := utils.GetUserIdByToken(c)
 
 	if err != nil {

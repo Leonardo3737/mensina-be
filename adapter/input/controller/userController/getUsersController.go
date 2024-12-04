@@ -12,7 +12,7 @@ import (
 // @Produce json
 // @Success 200 {array} models.User "Success"
 // @Router /user [get]
-func GetUsers(c *gin.Context) {
+func (controller userController) GetUsers(c *gin.Context) {
 	users, err := userUseCase.GetUsers()
 
 	if err != nil {
